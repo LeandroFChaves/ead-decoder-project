@@ -5,10 +5,12 @@ import br.com.ead.auth.enums.UserSituacao;
 import br.com.ead.auth.enums.UserTipo;
 import br.com.ead.auth.models.UserModel;
 import br.com.ead.auth.services.UserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -23,7 +25,8 @@ public class AuthenticationController {
     UserService userService;
 
     @PostMapping("registro")
-    public ResponseEntity<Object> registerUsuario(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<Object> createUsuario(@RequestBody @Validated(UserDTO.UserView.CadastroPost.class)
+                                                @JsonView(UserDTO.UserView.CadastroPost.class) UserDTO userDTO) {
         if (this.userService.existsByUsuario(userDTO.getUsuario())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: O usuário informado já existe!");
         }
