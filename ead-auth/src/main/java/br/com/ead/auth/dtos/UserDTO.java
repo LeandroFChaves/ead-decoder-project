@@ -1,21 +1,45 @@
 package br.com.ead.auth.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
+    public interface UserView {
+        interface CadastroPost {}
+        interface CadastroPut {}
+        interface SenhaPut {}
+        interface ImagemPut {}
+    }
+
     private Long id;
     private UUID idExterno;
+
+    @JsonView({UserView.CadastroPost.class, UserView.CadastroPut.class})
     private String nomeCompleto;
+
+    @JsonView(UserView.CadastroPost.class)
     private String usuario;
+
+    @JsonView({UserView.CadastroPost.class, UserView.SenhaPut.class})
     private String senha;
+
+    @JsonView({UserView.SenhaPut.class})
     private String senhaAnterior;
+
+    @JsonView(UserView.CadastroPost.class)
     private String email;
+
+    @JsonView({UserView.CadastroPost.class, UserView.CadastroPut.class})
     private String telefone;
+
+    @JsonView({UserView.CadastroPost.class, UserView.CadastroPut.class})
     private String cpf;
+
+    @JsonView({UserView.ImagemPut.class})
     private String imagemUrl;
 
     public Long getId() {
