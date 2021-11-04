@@ -1,12 +1,16 @@
 package br.com.ead.auth.controllers;
 
+import br.com.ead.auth.dtos.UserDTO;
 import br.com.ead.auth.models.UserModel;
 import br.com.ead.auth.services.UserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +36,69 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+    }
+
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<Object> updateUsuario(@PathVariable(value = "idUsuario") Long idUsuario,
+                                                @RequestBody @JsonView(UserDTO.UserView.CadastroPut.class) UserDTO userDto){
+        Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
+
+        if (userModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        } else {
+            UserModel userModel = userModelOptional.get();
+
+            userModel.setNomeCompleto(userDto.getNomeCompleto());
+            userModel.setTelefone(userDto.getTelefone());
+            userModel.setCpf(userDto.getCpf());
+            userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
+
+            this.userService.save(userModel);
+
+            return ResponseEntity.status(HttpStatus.OK).body(userModel);
+        }
+    }
+
+    @PutMapping("/{idUsuario}/senha")
+    public ResponseEntity<Object> updateSenha(@PathVariable(value = "idUsuario") Long idUsuario,
+                                              @RequestBody @JsonView(UserDTO.UserView.SenhaPut.class) UserDTO userDto){
+        Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
+
+        if (userModelOptional.isEmpty()) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+
+        if (!userModelOptional.get().getSenha().equals(userDto.getSenhaAnterior())) {
+            return  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Senha anterior incorreta!");
+        } else {
+            UserModel userModel = userModelOptional.get();
+
+            userModel.setSenha(userDto.getSenha());
+            userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
+
+            userService.save(userModel);
+
+            return  ResponseEntity.status(HttpStatus.OK).body("Senha atualizada com sucesso.");
+        }
+    }
+
+    @PutMapping("/{idUsuario}/imagem")
+    public ResponseEntity<Object> updateImagem(@PathVariable(value = "idUsuario") Long idUsuario,
+                                               @RequestBody @JsonView(UserDTO.UserView.ImagemPut.class) UserDTO userDto) {
+        Optional<UserModel> userModelOptional = userService.findById(idUsuario);
+
+        if (userModelOptional.isEmpty()) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        } else {
+            UserModel userModel = userModelOptional.get();
+
+            userModel.setImagemUrl(userDto.getImagemUrl());
+            userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
+
+            this.userService.save(userModel);
+
+            return  ResponseEntity.status(HttpStatus.OK).body(userModel);
+        }
     }
 
     @DeleteMapping("/{idUsuario}")
