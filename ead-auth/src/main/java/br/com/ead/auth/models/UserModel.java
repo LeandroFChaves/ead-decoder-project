@@ -27,7 +27,7 @@ public class UserModel implements Serializable {
     private Long id;
 
     @Type(type = "uuid-char")
-    @Column(nullable = false, updatable = false)
+    @Column(name="id_externo", nullable = false, updatable = false)
     private UUID idExterno;
 
     @Column(nullable = false, length = 200)
