@@ -1,5 +1,6 @@
 package br.com.ead.auth.dtos;
 
+import br.com.ead.auth.validations.UsuarioConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.br.CPF;
@@ -27,6 +28,7 @@ public class UserDTO {
 
     @NotBlank(groups = UserView.CadastroPost.class)
     @Size(min = 4, max = 50, groups = UserView.CadastroPost.class)
+    @UsuarioConstraint(groups = UserView.CadastroPost.class)
     @JsonView(UserView.CadastroPost.class)
     private String usuario;
 
