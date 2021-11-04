@@ -5,6 +5,10 @@ import br.com.ead.auth.models.UserModel;
 import br.com.ead.auth.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,8 +27,11 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserModel>> getAllUsuarios() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.userService.findAll());
+    public ResponseEntity<Page<UserModel>> getAllUsuarios(
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<UserModel> userModelPage = this.userService.findAll(pageable);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
     }
 
     @GetMapping("/{idUsuario}")
@@ -42,7 +48,7 @@ public class UserController {
     @PutMapping("/{idUsuario}")
     public ResponseEntity<Object> updateUsuario(@PathVariable(value = "idUsuario") Long idUsuario,
                                                 @RequestBody @Validated(UserDTO.UserView.CadastroPut.class)
-                                                @JsonView(UserDTO.UserView.CadastroPut.class) UserDTO userDto){
+                                                @JsonView(UserDTO.UserView.CadastroPut.class) UserDTO userDto) {
         Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
@@ -64,15 +70,15 @@ public class UserController {
     @PutMapping("/{idUsuario}/senha")
     public ResponseEntity<Object> updateSenha(@PathVariable(value = "idUsuario") Long idUsuario,
                                               @RequestBody @Validated(UserDTO.UserView.SenhaPut.class)
-                                              @JsonView(UserDTO.UserView.SenhaPut.class) UserDTO userDto){
+                                              @JsonView(UserDTO.UserView.SenhaPut.class) UserDTO userDto) {
         Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         }
 
         if (!userModelOptional.get().getSenha().equals(userDto.getSenhaAnterior())) {
-            return  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Senha anterior incorreta!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Senha anterior incorreta!");
         } else {
             UserModel userModel = userModelOptional.get();
 
@@ -81,7 +87,7 @@ public class UserController {
 
             userService.save(userModel);
 
-            return  ResponseEntity.status(HttpStatus.OK).body("Senha atualizada com sucesso.");
+            return ResponseEntity.status(HttpStatus.OK).body("Senha atualizada com sucesso.");
         }
     }
 
@@ -92,7 +98,7 @@ public class UserController {
         Optional<UserModel> userModelOptional = userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         } else {
             UserModel userModel = userModelOptional.get();
 
@@ -101,7 +107,7 @@ public class UserController {
 
             this.userService.save(userModel);
 
-            return  ResponseEntity.status(HttpStatus.OK).body(userModel);
+            return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
     }
 

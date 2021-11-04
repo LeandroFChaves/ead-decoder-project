@@ -4,6 +4,8 @@ import br.com.ead.auth.models.UserModel;
 import br.com.ead.auth.repositories.UserRepository;
 import br.com.ead.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserModel> findAll() {
         return this.userRepository.findAll();
+    }
+
+    @Override
+    public Page<UserModel> findAll(Pageable pageable) {
+        return this.userRepository.findAll(pageable);
     }
 
     @Override
