@@ -5,8 +5,13 @@ import br.com.ead.curso.models.CursoModel;
 import br.com.ead.curso.models.ModuloModel;
 import br.com.ead.curso.services.CursoService;
 import br.com.ead.curso.services.ModuloService;
+import br.com.ead.curso.specifications.SpecificationTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,21 +32,24 @@ public class ModuloController {
     CursoService coursoService;
 
     @GetMapping("/modulos")
-    public ResponseEntity<List<ModuloModel>> getAllModulos(){
-        return ResponseEntity.status(HttpStatus.OK).body(this.moduloService.findAll());
+    public ResponseEntity<Page<ModuloModel>> getAllModulos(SpecificationTemplate.ModuloSpec spec,
+                                                           @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.moduloService.findAll(spec, pageable));
     }
 
     @GetMapping("/cursos/{idCurso}/modulos")
-    public ResponseEntity<List<ModuloModel>> getAllModulos(@PathVariable(value="idCurso") Long idCurso){
-        return ResponseEntity.status(HttpStatus.OK).body(this.moduloService.findAllByCurso(idCurso));
+    public ResponseEntity<Page<ModuloModel>> getAllModulos(@PathVariable(value = "idCurso") Long idCurso,
+                                                           SpecificationTemplate.ModuloSpec spec,
+                                                           @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.moduloService.findAllByCurso(SpecificationTemplate.moduloCursoId(idCurso).and(spec), pageable));
     }
 
     @GetMapping("/cursos/{idCurso}/modulos/{idModulo}")
-    public ResponseEntity<Object> getModulo(@PathVariable(value="idCurso") Long idCurso,
-                                               @PathVariable(value="idModulo") Long idModulo){
+    public ResponseEntity<Object> getModulo(@PathVariable(value = "idCurso") Long idCurso,
+                                            @PathVariable(value = "idModulo") Long idModulo) {
         Optional<ModuloModel> moduleModelOptional = this.moduloService.findModuloIntoCurso(idCurso, idModulo);
 
-        if(moduleModelOptional.isEmpty()){
+        if (moduleModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Módulo não encontrado para o curso informado.");
         }
 
@@ -50,11 +57,11 @@ public class ModuloController {
     }
 
     @PostMapping("/cursos/{idCurso}/modulos")
-    public ResponseEntity<Object> saveModulo(@PathVariable(value="idCurso") Long idCurso,
-                                             @RequestBody @Valid ModuloDTO moduloDTO){
+    public ResponseEntity<Object> saveModulo(@PathVariable(value = "idCurso") Long idCurso,
+                                             @RequestBody @Valid ModuloDTO moduloDTO) {
         Optional<CursoModel> courseModelOptional = this.coursoService.findById(idCurso);
 
-        if(courseModelOptional.isEmpty()){
+        if (courseModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado.");
         }
 
@@ -68,12 +75,12 @@ public class ModuloController {
     }
 
     @PutMapping("/cursos/{idCurso}/modulos/{idModulo}")
-    public ResponseEntity<Object> updateModulo(@PathVariable(value="idCurso") Long idCurso,
-                                               @PathVariable(value="idModulo") Long idModulo,
-                                               @RequestBody @Valid ModuloDTO moduloDTO){
+    public ResponseEntity<Object> updateModulo(@PathVariable(value = "idCurso") Long idCurso,
+                                               @PathVariable(value = "idModulo") Long idModulo,
+                                               @RequestBody @Valid ModuloDTO moduloDTO) {
         Optional<ModuloModel> moduleModelOptional = this.moduloService.findModuloIntoCurso(idCurso, idModulo);
 
-        if(moduleModelOptional.isEmpty()){
+        if (moduleModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Módulo não encontrado para o curso informado.");
         }
 
@@ -85,11 +92,11 @@ public class ModuloController {
     }
 
     @DeleteMapping("/cursos/{idCurso}/modulos/{idModulo}")
-    public ResponseEntity<Object> deleteModulo(@PathVariable(value="idCurso") Long idCurso,
-                                               @PathVariable(value="idModulo") Long idModulo){
+    public ResponseEntity<Object> deleteModulo(@PathVariable(value = "idCurso") Long idCurso,
+                                               @PathVariable(value = "idModulo") Long idModulo) {
         Optional<ModuloModel> moduleModelOptional = this.moduloService.findModuloIntoCurso(idCurso, idModulo);
 
-        if(moduleModelOptional.isEmpty()){
+        if (moduleModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Módulo não encontrado para o curso informado.");
         }
 

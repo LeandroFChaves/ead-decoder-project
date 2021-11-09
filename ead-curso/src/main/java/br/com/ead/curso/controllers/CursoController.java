@@ -3,8 +3,13 @@ package br.com.ead.curso.controllers;
 import br.com.ead.curso.dtos.CursoDTO;
 import br.com.ead.curso.models.CursoModel;
 import br.com.ead.curso.services.CursoService;
+import br.com.ead.curso.specifications.SpecificationTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,8 +28,9 @@ public class CursoController {
     CursoService cursoService;
 
     @GetMapping
-    public ResponseEntity<List<CursoModel>> getAllCursos() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.cursoService.findAll());
+    public ResponseEntity<Page<CursoModel>> getAllCursos(SpecificationTemplate.CursoSpec spec,
+                                                         @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.cursoService.findAll(spec, pageable));
     }
 
     @GetMapping("/{idCurso}")

@@ -6,6 +6,9 @@ import br.com.ead.curso.repositories.AulaRepository;
 import br.com.ead.curso.repositories.ModuloRepository;
 import br.com.ead.curso.services.ModuloService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,16 @@ public class ModuloServiceImpl implements ModuloService {
     @Override
     public List<ModuloModel> findAll() {
         return this.moduloRepository.findAll();
+    }
+
+    @Override
+    public Page<ModuloModel> findAll(Specification<ModuloModel> spec, Pageable pageable) {
+        return this.moduloRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<ModuloModel> findAllByCurso(Specification<ModuloModel> spec, Pageable pageable) {
+        return this.moduloRepository.findAll(spec, pageable);
     }
 
     @Override

@@ -5,8 +5,13 @@ import br.com.ead.curso.models.AulaModel;
 import br.com.ead.curso.models.ModuloModel;
 import br.com.ead.curso.services.AulaService;
 import br.com.ead.curso.services.ModuloService;
+import br.com.ead.curso.specifications.SpecificationTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,13 +32,16 @@ public class AulaController {
     ModuloService moduloService;
 
     @GetMapping("/aulas")
-    public ResponseEntity<List<AulaModel>> getAllAulas() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.aulaService.findAll());
+    public ResponseEntity<Page<AulaModel>> getAllAulas(SpecificationTemplate.AulaSpec spec,
+                                                       @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.aulaService.findAll(spec, pageable));
     }
 
     @GetMapping("/modulos/{idModulo}/aulas")
-    public ResponseEntity<List<AulaModel>> getAllAulas(@PathVariable(value = "idModulo") Long idModulo) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.aulaService.findAllByModulo(idModulo));
+    public ResponseEntity<Page<AulaModel>> getAllAulas(@PathVariable(value = "idModulo") Long idModulo,
+                                                       SpecificationTemplate.AulaSpec spec,
+                                                       @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.aulaService.findAllByModulo(SpecificationTemplate.aulaModuloId(idModulo).and(spec), pageable));
     }
 
     @GetMapping("/modulos/{idModulo}/aulas/{idAula}")

@@ -8,6 +8,9 @@ import br.com.ead.curso.repositories.CursoRepository;
 import br.com.ead.curso.repositories.ModuloRepository;
 import br.com.ead.curso.services.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,11 @@ public class CursoServiceImpl implements CursoService {
     @Override
     public List<CursoModel> findAll() {
         return this.cursoRepository.findAll();
+    }
+
+    @Override
+    public Page<CursoModel> findAll(Specification<CursoModel> spec, Pageable pageable) {
+        return this.cursoRepository.findAll(spec, pageable);
     }
 
     @Override

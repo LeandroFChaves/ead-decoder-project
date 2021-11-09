@@ -4,6 +4,9 @@ import br.com.ead.curso.models.AulaModel;
 import br.com.ead.curso.repositories.AulaRepository;
 import br.com.ead.curso.services.AulaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,16 @@ public class AulaServiceImpl implements AulaService {
     @Override
     public List<AulaModel> findAll() {
         return this.aulaRepository.findAll();
+    }
+
+    @Override
+    public Page<AulaModel> findAll(Specification<AulaModel> spec, Pageable pageable) {
+        return this.aulaRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<AulaModel> findAllByModulo(Specification<AulaModel> spec, Pageable pageable) {
+        return this.aulaRepository.findAll(spec, pageable);
     }
 
     @Override
