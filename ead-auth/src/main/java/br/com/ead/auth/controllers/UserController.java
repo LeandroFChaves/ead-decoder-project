@@ -5,6 +5,8 @@ import br.com.ead.auth.models.UserModel;
 import br.com.ead.auth.services.UserService;
 import br.com.ead.auth.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/usuarios")
 public class UserController {
+
+    Logger log = LogManager.getLogger(this.getClass());
 
     @Autowired
     UserService userService;
@@ -89,6 +93,8 @@ public class UserController {
         }
 
         if (!userModelOptional.get().getSenha().equals(userDto.getSenhaAnterior())) {
+            log.warn("Senha anterior incorreta userId {}", userDto.getIdExterno());
+
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Senha anterior incorreta!");
         } else {
             UserModel userModel = userModelOptional.get();
