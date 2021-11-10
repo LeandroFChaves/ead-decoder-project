@@ -111,4 +111,16 @@ public class ModuloModel implements Serializable {
         this.dataCriacao = dataCriacao;
     }
 
+    @Override
+    public String toString() {
+        return "ModuloModel{" +
+                "id=" + id +
+                ", idExterno=" + idExterno +
+                ", titulo='" + titulo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", curso=" + curso +
+                ", aulas=" + aulas +
+                ", dataCriacao=" + dataCriacao +
+                '}';
+    }
 }

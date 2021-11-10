@@ -28,7 +28,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private Long id;
 
     @Type(type = "uuid-char")
-    @Column(name="id_externo", nullable = false, updatable = false)
+    @Column(name = "id_externo", nullable = false, updatable = false)
     private UUID idExterno;
 
     @Column(nullable = false, length = 200)
@@ -182,5 +182,24 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
 
     public void setDataUltimaAtualizacao(LocalDateTime dataUltimaAtualizacao) {
         this.dataUltimaAtualizacao = dataUltimaAtualizacao;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", idExterno=" + idExterno +
+                ", nomeCompleto='" + nomeCompleto + '\'' +
+                ", usuario='" + usuario + '\'' +
+                ", senha='" + senha + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", imagemUrl='" + imagemUrl + '\'' +
+                ", tipo=" + tipo +
+                ", situacao=" + situacao +
+                ", dataCriacao=" + dataCriacao +
+                ", dataUltimaAtualizacao=" + dataUltimaAtualizacao +
+                '}';
     }
 }

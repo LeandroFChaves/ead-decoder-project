@@ -72,4 +72,16 @@ public class CursoDTO {
     public void setUsuarioDocente(Long usuarioDocente) {
         this.usuarioDocente = usuarioDocente;
     }
+
+    @Override
+    public String toString() {
+        return "CursoDTO{" +
+                "nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", imagemUrl='" + imagemUrl + '\'' +
+                ", situacao=" + situacao +
+                ", nivel=" + nivel +
+                ", usuarioDocente=" + usuarioDocente +
+                '}';
+    }
 }

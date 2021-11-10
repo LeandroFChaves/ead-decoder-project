@@ -137,4 +137,20 @@ public class UserDTO {
     public void setImagemUrl(String imagemUrl) {
         this.imagemUrl = imagemUrl;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", idExterno=" + idExterno +
+                ", nomeCompleto='" + nomeCompleto + '\'' +
+                ", usuario='" + usuario + '\'' +
+                ", senha='" + senha + '\'' +
+                ", senhaAnterior='" + senhaAnterior + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", imagemUrl='" + imagemUrl + '\'' +
+                '}';
+    }
 }

@@ -35,4 +35,13 @@ public class AulaDTO {
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
     }
+
+    @Override
+    public String toString() {
+        return "AulaDTO{" +
+                "titulo='" + titulo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                '}';
+    }
 }

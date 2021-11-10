@@ -160,4 +160,21 @@ public class CursoModel implements Serializable {
     public void setDataUltimaAtualizacao(LocalDateTime dataUltimaAtualizacao) {
         this.dataUltimaAtualizacao = dataUltimaAtualizacao;
     }
+
+    @Override
+    public String toString() {
+        return "CursoModel{" +
+                "id=" + id +
+                ", idExterno=" + idExterno +
+                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", imagemUrl='" + imagemUrl + '\'' +
+                ", situacao=" + situacao +
+                ", nivel=" + nivel +
+                ", usuarioDocente=" + usuarioDocente +
+                ", modulos=" + modulos +
+                ", dataCriacao=" + dataCriacao +
+                ", dataUltimaAtualizacao=" + dataUltimaAtualizacao +
+                '}';
+    }
 }

@@ -108,4 +108,17 @@ public class AulaModel implements Serializable {
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
+
+    @Override
+    public String toString() {
+        return "AulaModel{" +
+                "id=" + id +
+                ", idExterno=" + idExterno +
+                ", titulo='" + titulo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", modulo=" + modulo +
+                ", dataCriacao=" + dataCriacao +
+                '}';
+    }
 }
