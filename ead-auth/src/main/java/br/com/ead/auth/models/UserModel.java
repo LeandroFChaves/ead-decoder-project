@@ -5,12 +5,14 @@ import br.com.ead.auth.enums.UserTipo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Type;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -49,6 +51,10 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
 
     @Column(length = 20)
     private String cpf;
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Set<UsuarioCursoModel> usuariosCursos;
 
     @Column
     private String imagemUrl;
@@ -142,6 +148,14 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Set<UsuarioCursoModel> getUsuariosCursos() {
+        return usuariosCursos;
+    }
+
+    public void setUsuariosCursos(Set<UsuarioCursoModel> usuariosCursos) {
+        this.usuariosCursos = usuariosCursos;
     }
 
     public String getImagemUrl() {

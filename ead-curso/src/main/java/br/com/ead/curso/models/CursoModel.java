@@ -54,6 +54,10 @@ public class CursoModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<ModuloModel> modulos;
 
+    @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Set<CursoUsuarioModel> cursosUsuarios;
+
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
@@ -143,6 +147,14 @@ public class CursoModel implements Serializable {
 
     public void setModulos(Set<ModuloModel> modulos) {
         this.modulos = modulos;
+    }
+
+    public Set<CursoUsuarioModel> getCursosUsuarios() {
+        return cursosUsuarios;
+    }
+
+    public void setCursosUsuarios(Set<CursoUsuarioModel> cursosUsuarios) {
+        this.cursosUsuarios = cursosUsuarios;
     }
 
     public LocalDateTime getDataCriacao() {

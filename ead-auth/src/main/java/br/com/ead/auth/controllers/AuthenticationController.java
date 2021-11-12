@@ -55,7 +55,7 @@ public class AuthenticationController {
 
         this.userService.save(userModel);
 
-        log.debug("POST createUsuario userDTO salvo {}", userModel.toString());
+        log.debug("POST createUsuario userDTO salvo {}", userModel.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
     }
