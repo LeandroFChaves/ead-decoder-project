@@ -173,6 +173,10 @@ public class CursoModel implements Serializable {
         this.dataUltimaAtualizacao = dataUltimaAtualizacao;
     }
 
+    public CursoUsuarioModel convertToCursoUsuarioModel(Long idUsuario) {
+        return new CursoUsuarioModel(this, this.id, idUsuario);
+    }
+
     @Override
     public String toString() {
         return "CursoModel{" +

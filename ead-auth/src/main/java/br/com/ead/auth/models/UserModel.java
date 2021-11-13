@@ -198,6 +198,10 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
         this.dataUltimaAtualizacao = dataUltimaAtualizacao;
     }
 
+    public UsuarioCursoModel convertToUsuarioCursoModel(Long idCurso) {
+        return new UsuarioCursoModel(this, this.id, idCurso);
+    }
+
     @Override
     public String toString() {
         return "UserModel{" +

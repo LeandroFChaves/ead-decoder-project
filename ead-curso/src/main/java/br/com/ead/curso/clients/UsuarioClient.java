@@ -1,5 +1,6 @@
 package br.com.ead.curso.clients;
 
+import br.com.ead.curso.dtos.MatriculaCursoDTO;
 import br.com.ead.curso.dtos.ResponsePageDTO;
 import br.com.ead.curso.dtos.UsuarioDTO;
 import br.com.ead.curso.services.UtilsService;
@@ -34,19 +35,20 @@ public class UsuarioClient {
     @Autowired
     UtilsService utilsService;
 
-    public Page<UsuarioDTO> getAllUsuariosByCurso(Long idCurso, Pageable pageable){
+    public Page<UsuarioDTO> getAllUsuariosByCurso(Long idCurso, Pageable pageable) {
         List<UsuarioDTO> usuarios = new ArrayList<UsuarioDTO>();
         String url = this.REQUEST_URI_USUARIOS + utilsService.createUrlGetAllUsuariosByCurso(idCurso, pageable);
 
         log.debug("Request URL: {} ", url);
 
-        try{
-            ParameterizedTypeReference<ResponsePageDTO<UsuarioDTO>> responseType = new ParameterizedTypeReference<ResponsePageDTO<UsuarioDTO>>() {};
+        try {
+            ParameterizedTypeReference<ResponsePageDTO<UsuarioDTO>> responseType = new ParameterizedTypeReference<ResponsePageDTO<UsuarioDTO>>() {
+            };
             ResponseEntity<ResponsePageDTO<UsuarioDTO>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
             usuarios = result.getBody().getContent();
 
             log.debug("Response /usuarios - Número de elementos: {} ", usuarios.size());
-        } catch (HttpStatusCodeException e){
+        } catch (HttpStatusCodeException e) {
             log.error("Error request /usuarios {} ", e);
         }
 
@@ -55,4 +57,19 @@ public class UsuarioClient {
         return new PageImpl<>(usuarios);
     }
 
+    public ResponseEntity<UsuarioDTO> getOneUsuarioById(Long idUsuario) {
+        String url = this.REQUEST_URI_USUARIOS + "/usuarios/" + idUsuario;
+
+        return this.restTemplate.exchange(url, HttpMethod.GET, null, UsuarioDTO.class);
+    }
+
+    public void postMatricularUsuarioInCurso(Long idCurso, Long idUsuario) {
+        String url = this.REQUEST_URI_USUARIOS + "/usuarios/" + idUsuario + "/cursos/matricula";
+
+        MatriculaCursoDTO matriculaCursoDTO = new MatriculaCursoDTO();
+        matriculaCursoDTO.setIdUsuario(idUsuario);
+        matriculaCursoDTO.setIdCurso(idCurso);
+
+        this.restTemplate.postForObject(url, matriculaCursoDTO, String.class);
+    }
 }

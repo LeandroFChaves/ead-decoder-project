@@ -4,22 +4,21 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class UsuarioCursoId implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
-    private UserModel usuario;
+    private Long idUsuario;
     private Long idCurso;
 
-    public UsuarioCursoId(UserModel usuario, Long idCurso) {
-        this.usuario = usuario;
-        this.idCurso = idCurso;
+    public UsuarioCursoId() {
     }
 
-    public UserModel getUsuario() {
-        return usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setUsuario(UserModel usuario) {
-        this.usuario = usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Long getIdCurso() {
@@ -35,11 +34,11 @@ public class UsuarioCursoId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UsuarioCursoId that = (UsuarioCursoId) o;
-        return usuario.equals(that.usuario) && idCurso.equals(that.idCurso);
+        return idUsuario.equals(that.idUsuario) && idCurso.equals(that.idCurso);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(usuario, idCurso);
+        return Objects.hash(idUsuario, idCurso);
     }
 }

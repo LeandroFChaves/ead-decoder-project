@@ -6,20 +6,18 @@ import java.util.Objects;
 public class CursoUsuarioId implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private CursoModel curso;
+    private Long idCurso;
     private Long idUsuario;
 
-    public CursoUsuarioId(CursoModel curso, Long idUsuario) {
-        this.curso = curso;
-        this.idUsuario = idUsuario;
+    public CursoUsuarioId() {
     }
 
-    public CursoModel getCurso() {
-        return curso;
+    public Long getIdCurso() {
+        return idCurso;
     }
 
-    public void setCurso(CursoModel curso) {
-        this.curso = curso;
+    public void setIdCurso(Long idCurso) {
+        this.idCurso = idCurso;
     }
 
     public Long getIdUsuario() {
@@ -35,11 +33,11 @@ public class CursoUsuarioId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CursoUsuarioId that = (CursoUsuarioId) o;
-        return curso.equals(that.curso) && idUsuario.equals(that.idUsuario);
+        return idCurso.equals(that.idCurso) && idUsuario.equals(that.idUsuario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(curso, idUsuario);
+        return Objects.hash(idCurso, idUsuario);
     }
 }

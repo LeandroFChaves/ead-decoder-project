@@ -1,6 +1,8 @@
 package br.com.ead.auth.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,23 +12,37 @@ import java.io.Serializable;
 @Table(name = "USUARIOS_CURSOS")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsuarioCursoModel implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_usuario", foreignKey = @ForeignKey(name = "FK_USUARIOS_CURSOS_USUARIO"))
-    private UserModel usuario;
+    @Column(name = "id_usuario", nullable = false)
+    private Long idUsuario;
 
     @Id
     @Column(name = "id_curso", nullable = false)
     private Long idCurso;
 
-    public UserModel getUsuario() {
-        return usuario;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "id_usuario", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_USUARIOS_CURSOS_USUARIO"))
+    private UserModel usuario;
+
+    public UsuarioCursoModel() {
     }
 
-    public void setUsuario(UserModel usuario) {
+    public UsuarioCursoModel(UserModel usuario, Long idUsuario, Long idCurso) {
         this.usuario = usuario;
+        this.idUsuario = idUsuario;
+        this.idCurso = idCurso;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Long getIdCurso() {
@@ -35,5 +51,13 @@ public class UsuarioCursoModel implements Serializable {
 
     public void setIdCurso(Long idCurso) {
         this.idCurso = idCurso;
+    }
+
+    public UserModel getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UserModel usuario) {
+        this.usuario = usuario;
     }
 }
