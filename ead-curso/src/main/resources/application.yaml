@@ -40,4 +40,4 @@ eureka:
 ead:
   api:
     url:
-      usuarios: 'http://localhost:8087'
+      usuarios: 'http://ead-auth'
