@@ -2,9 +2,11 @@ package br.com.ead.curso.services.impl;
 
 import br.com.ead.curso.models.AulaModel;
 import br.com.ead.curso.models.CursoModel;
+import br.com.ead.curso.models.CursoUsuarioModel;
 import br.com.ead.curso.models.ModuloModel;
 import br.com.ead.curso.repositories.AulaRepository;
 import br.com.ead.curso.repositories.CursoRepository;
+import br.com.ead.curso.repositories.CursoUsuarioRepository;
 import br.com.ead.curso.repositories.ModuloRepository;
 import br.com.ead.curso.services.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class CursoServiceImpl implements CursoService {
 
     @Autowired
     CursoRepository cursoRepository;
+
+    @Autowired
+    CursoUsuarioRepository cursoUsuarioRepository;
 
     @Autowired
     ModuloRepository moduloRepository;
@@ -64,6 +69,11 @@ public class CursoServiceImpl implements CursoService {
             }
 
             this.moduloRepository.deleteAll(listModulosIntoCurso);
+        }
+
+        List<CursoUsuarioModel> cursoUsuarioModelList = this.cursoUsuarioRepository.findAllCursoUsuarioIntoCurso(curso.getId());
+        if (!cursoUsuarioModelList.isEmpty()) {
+            this.cursoUsuarioRepository.deleteAll(cursoUsuarioModelList);
         }
 
         this.cursoRepository.delete(curso);
