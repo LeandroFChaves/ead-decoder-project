@@ -4,6 +4,9 @@ import br.com.ead.curso.dtos.CursoDTO;
 import br.com.ead.curso.models.CursoModel;
 import br.com.ead.curso.services.CursoService;
 import br.com.ead.curso.specifications.SpecificationTemplate;
+import br.com.ead.curso.validations.CursoValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,8 +28,13 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CursoController {
 
+    Logger log = LogManager.getLogger(this.getClass());
+
     @Autowired
     CursoService cursoService;
+
+    @Autowired
+    CursoValidator cursoValidator;
 
     @GetMapping
     public ResponseEntity<Page<CursoModel>> getAllCursos(SpecificationTemplate.CursoSpec spec,
@@ -54,7 +63,14 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveCurso(@RequestBody @Valid CursoDTO cursoDTO) {
+    public ResponseEntity<Object> saveCurso(@RequestBody CursoDTO cursoDTO, Errors errors) {
+        log.debug("POST saveCurso cursoDTO recebido {} ", cursoDTO.toString());
+        this.cursoValidator.validate(cursoDTO, errors);
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
+        }
+
         CursoModel cursoModel = new CursoModel();
         BeanUtils.copyProperties(cursoDTO, cursoModel);
 
