@@ -2,6 +2,8 @@ server:
   port: 8087
 
 spring:
+  application:
+    name: ead-auth
   datasource:
     url: jdbc:postgresql://localhost:5432/ead-auth
     username: admin
@@ -27,6 +29,13 @@ logging:
     org.springframework.web: INFO
     org.hibernate: INFO
     br.com.ead: DEBUG
+
+eureka:
+  client:
+    service-url:
+      default-zone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost
 
 ead:
   api:
