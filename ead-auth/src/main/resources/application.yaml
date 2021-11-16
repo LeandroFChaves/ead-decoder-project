@@ -1,9 +1,11 @@
 server:
   port: 8087
+  servlet:
+    context-path: '/ead-auth/'
 
 spring:
   application:
-    name: ead-auth
+    name: ead-auth-service
   datasource:
     url: jdbc:postgresql://localhost:5432/ead-auth
     username: admin
@@ -40,4 +42,4 @@ eureka:
 ead:
   api:
     url:
-      cursos: 'http://ead-curso'
+      cursos: 'http://ead-curso-service/ead-curso'
