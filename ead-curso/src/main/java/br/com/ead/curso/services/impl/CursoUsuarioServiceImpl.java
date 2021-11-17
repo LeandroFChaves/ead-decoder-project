@@ -24,6 +24,11 @@ public class CursoUsuarioServiceImpl implements CursoUsuarioService {
     }
 
     @Override
+    public boolean existsByIdUsuario(Long idUsuario) {
+        return this.cursoUsuarioRepository.existsByIdUsuario(idUsuario);
+    }
+
+    @Override
     public CursoUsuarioModel save(CursoUsuarioModel cursoUsuarioModel) {
         return this.cursoUsuarioRepository.save(cursoUsuarioModel);
     }
@@ -35,5 +40,11 @@ public class CursoUsuarioServiceImpl implements CursoUsuarioService {
         this.usuarioClient.postMatricularUsuarioInCurso(cursoUsuarioModel.getCurso().getId(), cursoUsuarioModel.getIdUsuario());
 
         return cursoUsuarioModel;
+    }
+
+    @Override
+    @Transactional
+    public void deleteCursoUsuarioByUsuario(Long idUsuario) {
+        this.cursoUsuarioRepository.deleteAllByIdUsuario(idUsuario);
     }
 }

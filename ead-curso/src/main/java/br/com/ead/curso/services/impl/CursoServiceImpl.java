@@ -1,5 +1,6 @@
 package br.com.ead.curso.services.impl;
 
+import br.com.ead.curso.clients.UsuarioClient;
 import br.com.ead.curso.models.AulaModel;
 import br.com.ead.curso.models.CursoModel;
 import br.com.ead.curso.models.CursoUsuarioModel;
@@ -34,6 +35,9 @@ public class CursoServiceImpl implements CursoService {
     @Autowired
     AulaRepository aulaRepository;
 
+    @Autowired
+    UsuarioClient usuarioClient;
+
     @Override
     public List<CursoModel> findAll() {
         return this.cursoRepository.findAll();
@@ -57,6 +61,8 @@ public class CursoServiceImpl implements CursoService {
     @Override
     @Transactional
     public void delete(CursoModel curso) {
+        boolean deleteCursoUsuarioInUsuario = false;
+
         List<ModuloModel> listModulosIntoCurso = this.moduloRepository.findAllModulosIntoCurso(curso.getId());
 
         if (!listModulosIntoCurso.isEmpty()) {
@@ -74,9 +80,14 @@ public class CursoServiceImpl implements CursoService {
         List<CursoUsuarioModel> cursoUsuarioModelList = this.cursoUsuarioRepository.findAllCursoUsuarioIntoCurso(curso.getId());
         if (!cursoUsuarioModelList.isEmpty()) {
             this.cursoUsuarioRepository.deleteAll(cursoUsuarioModelList);
+            deleteCursoUsuarioInUsuario = true;
         }
 
         this.cursoRepository.delete(curso);
+
+        if (deleteCursoUsuarioInUsuario) {
+            this.usuarioClient.deleteCursoInUsuario(curso.getId());
+        }
     }
 
 }

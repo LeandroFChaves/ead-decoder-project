@@ -42,4 +42,4 @@ eureka:
 ead:
   api:
     url:
-      cursos: 'http://ead-curso-service/ead-curso'
+      cursos: 'http://ead-curso-service/ead-cursos'

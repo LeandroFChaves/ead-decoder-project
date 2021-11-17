@@ -55,4 +55,14 @@ public class UsuarioCursoController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCursoModel);
     }
+
+    @DeleteMapping("/usuarios/cursos/{idCurso}")
+    public ResponseEntity<Object> deleteUserCourseByCourse(@PathVariable(value = "idCurso") Long idCurso) {
+        if (!this.usuarioCursoService.existsByIdCurso(idCurso)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("UsuarioCurso não encontrado.");
+        }
+        this.usuarioCursoService.deleteUsuarioCursoByCurso(idCurso);
+
+        return ResponseEntity.status(HttpStatus.OK).body("UsuarioCurso apagado com sucesso.");
+    }
 }

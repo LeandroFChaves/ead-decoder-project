@@ -6,6 +6,7 @@ import br.com.ead.auth.repositories.UsuarioCursoRepository;
 import br.com.ead.auth.services.UsuarioCursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioCursoServiceImpl implements UsuarioCursoService {
@@ -19,7 +20,20 @@ public class UsuarioCursoServiceImpl implements UsuarioCursoService {
     }
 
     @Override
+    public boolean existsByIdCurso(Long idCurso) {
+        return this.usuarioCursoRepository.existsByIdCurso(idCurso);
+    }
+
+    @Override
     public UsuarioCursoModel save(UsuarioCursoModel usuarioCursoModel) {
         return this.usuarioCursoRepository.save(usuarioCursoModel);
     }
+
+    @Override
+    @Transactional
+    public void deleteUsuarioCursoByCurso(Long idCurso) {
+        this.usuarioCursoRepository.deleteAllByIdCurso(idCurso);
+    }
+
+
 }

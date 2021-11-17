@@ -43,7 +43,8 @@ public class CursoClient {
 
         try {
             ParameterizedTypeReference<ResponsePageDTO<CursoDTO>> responseType =
-                    new ParameterizedTypeReference<ResponsePageDTO<CursoDTO>>() {};
+                    new ParameterizedTypeReference<ResponsePageDTO<CursoDTO>>() {
+                    };
 
             ResponseEntity<ResponsePageDTO<CursoDTO>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
             cursos = result.getBody().getContent();
@@ -56,5 +57,11 @@ public class CursoClient {
         log.debug("Request finalizado /cursos idUsuario {} ", idUsuario);
 
         return new PageImpl<>(cursos);
+    }
+
+    public void deleteUsuarioInCurso(Long idUsuario) {
+        String url = this.REQUEST_URI_CURSOS + "/cursos/usuarios/" + idUsuario;
+
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
     }
 }

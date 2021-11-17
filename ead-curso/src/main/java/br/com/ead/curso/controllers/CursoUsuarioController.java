@@ -9,7 +9,6 @@ import br.com.ead.curso.models.CursoUsuarioModel;
 import br.com.ead.curso.services.CursoService;
 import br.com.ead.curso.services.CursoUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -35,8 +34,13 @@ public class CursoUsuarioController {
     CursoUsuarioService cursoUsuarioService;
 
     @GetMapping("/cursos/{idCurso}/usuarios")
-    public ResponseEntity<Page<UsuarioDTO>> getAllUsuariosByCurso(@PathVariable(value = "idCurso") Long idCurso,
-                                                                  @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Object> getAllUsuariosByCurso(@PathVariable(value = "idCurso") Long idCurso,
+                                                        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
+        if (!cursoModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado.");
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(this.usuarioClient.getAllUsuariosByCurso(idCurso, pageable));
     }
 
@@ -71,5 +75,16 @@ public class CursoUsuarioController {
         CursoUsuarioModel cursoUsuarioResult = this.cursoUsuarioService.saveAndMatriculaUsuarioInCurso(cursoUsuarioModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cursoUsuarioResult);
+    }
+
+    @DeleteMapping("/cursos/usuarios/{idUsuario}")
+    public ResponseEntity<Object> deleteCourseUserByUser(@PathVariable(value = "idUsuario") Long idUsuario) {
+        if (!this.cursoUsuarioService.existsByIdUsuario(idUsuario)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CursoUsuario não encontrado.");
+        }
+
+        this.cursoUsuarioService.deleteCursoUsuarioByUsuario(idUsuario);
+
+        return ResponseEntity.status(HttpStatus.OK).body("CursoUsuario apagado com sucesso.");
     }
 }

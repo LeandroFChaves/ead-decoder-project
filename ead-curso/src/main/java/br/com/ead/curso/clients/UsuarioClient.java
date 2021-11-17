@@ -72,4 +72,10 @@ public class UsuarioClient {
 
         this.restTemplate.postForObject(url, matriculaCursoDTO, String.class);
     }
+
+    public void deleteCursoInUsuario(Long idCurso) {
+        String url = this.REQUEST_URI_USUARIOS + "/usuarios/cursos/" + idCurso;
+
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
+    }
 }

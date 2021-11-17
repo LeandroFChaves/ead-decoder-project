@@ -17,4 +17,8 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuarioModel,
     @Query(value = "select * from cursos_usuarios where id_curso = :idCurso", nativeQuery = true)
     List<CursoUsuarioModel> findAllCursoUsuarioIntoCurso(@Param("idCurso") Long idCurso);
 
+    boolean existsByIdUsuario(Long idUsuario);
+
+    void deleteAllByIdUsuario(Long idUsuario);
+
 }
