@@ -2,9 +2,7 @@ package br.com.ead.auth.services.impl;
 
 import br.com.ead.auth.clients.CursoClient;
 import br.com.ead.auth.models.UserModel;
-import br.com.ead.auth.models.UsuarioCursoModel;
 import br.com.ead.auth.repositories.UserRepository;
-import br.com.ead.auth.repositories.UsuarioCursoRepository;
 import br.com.ead.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,9 +19,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UsuarioCursoRepository usuarioCursoRepository;
 
     @Autowired
     private CursoClient cursoClient;
@@ -51,19 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(UserModel userModel) {
-        boolean deleteUsuarioCursoInCurso = false;
-
-        List<UsuarioCursoModel> userCourseModelList = this.usuarioCursoRepository.findAllUserCourseIntoUser(userModel.getId());
-        if (!userCourseModelList.isEmpty()) {
-            this.usuarioCursoRepository.deleteAll(userCourseModelList);
-            deleteUsuarioCursoInCurso = true;
-        }
-
         this.userRepository.delete(userModel);
-
-        if (deleteUsuarioCursoInCurso) {
-            this.cursoClient.deleteUsuarioInCurso(userModel.getId());
-        }
     }
 
     @Override

@@ -59,9 +59,4 @@ public class CursoClient {
         return new PageImpl<>(cursos);
     }
 
-    public void deleteUsuarioInCurso(Long idUsuario) {
-        String url = this.REQUEST_URI_CURSOS + "/cursos/usuarios/" + idUsuario;
-
-        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
-    }
 }

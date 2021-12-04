@@ -26,7 +26,7 @@ public class CursoModel implements Serializable {
     private Long id;
 
     @Type(type = "uuid-char")
-    @Column(name="id_externo", nullable = false, updatable = false)
+    @Column(name = "id_externo", nullable = false, updatable = false)
     private UUID idExterno;
 
     @Column(nullable = false, length = 150)
@@ -53,10 +53,6 @@ public class CursoModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<ModuloModel> modulos;
-
-    @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Set<CursoUsuarioModel> cursosUsuarios;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
@@ -149,14 +145,6 @@ public class CursoModel implements Serializable {
         this.modulos = modulos;
     }
 
-    public Set<CursoUsuarioModel> getCursosUsuarios() {
-        return cursosUsuarios;
-    }
-
-    public void setCursosUsuarios(Set<CursoUsuarioModel> cursosUsuarios) {
-        this.cursosUsuarios = cursosUsuarios;
-    }
-
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
@@ -171,10 +159,6 @@ public class CursoModel implements Serializable {
 
     public void setDataUltimaAtualizacao(LocalDateTime dataUltimaAtualizacao) {
         this.dataUltimaAtualizacao = dataUltimaAtualizacao;
-    }
-
-    public CursoUsuarioModel convertToCursoUsuarioModel(Long idUsuario) {
-        return new CursoUsuarioModel(this, this.id, idUsuario);
     }
 
     @Override
