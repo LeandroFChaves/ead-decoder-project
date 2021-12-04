@@ -54,3 +54,6 @@ ead:
   api:
     url:
       cursos: 'http://ead-curso-service/ead-cursos'
+  broker:
+    exchange:
+      usuarioEvent: ead.usuarioevent

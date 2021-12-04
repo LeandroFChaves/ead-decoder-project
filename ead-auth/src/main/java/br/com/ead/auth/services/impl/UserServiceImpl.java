@@ -1,7 +1,8 @@
 package br.com.ead.auth.services.impl;
 
-import br.com.ead.auth.clients.CursoClient;
+import br.com.ead.auth.enums.TipoOperacao;
 import br.com.ead.auth.models.UserModel;
+import br.com.ead.auth.publishers.UsuarioEventPublisher;
 import br.com.ead.auth.repositories.UserRepository;
 import br.com.ead.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private CursoClient cursoClient;
+    private UsuarioEventPublisher usuarioEventPublisher;
 
     @Override
     public List<UserModel> findAll() {
@@ -50,8 +51,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserModel userModel) {
-        this.userRepository.save(userModel);
+    public UserModel save(UserModel userModel) {
+        return this.userRepository.save(userModel);
+    }
+
+    @Override
+    @Transactional
+    public UserModel saveUsuarioAndPublishRabbitMQ(UserModel usuarioModel) {
+        usuarioModel = save(usuarioModel);
+        usuarioEventPublisher.publishUsuarioEvent(usuarioModel.convertToUsuarioEventDTO(), TipoOperacao.CREATE);
+
+        return usuarioModel;
     }
 
     @Override

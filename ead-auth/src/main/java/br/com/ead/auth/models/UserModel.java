@@ -1,11 +1,13 @@
 package br.com.ead.auth.models;
 
+import br.com.ead.auth.dtos.UsuarioEventDTO;
 import br.com.ead.auth.enums.UserSituacao;
 import br.com.ead.auth.enums.UserTipo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Type;
+import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -78,6 +80,16 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
         if (idExterno == null) {
             idExterno = UUID.randomUUID();
         }
+    }
+
+    public UsuarioEventDTO convertToUsuarioEventDTO() {
+        UsuarioEventDTO usuarioEventDTO = new UsuarioEventDTO();
+
+        BeanUtils.copyProperties(this, usuarioEventDTO);
+        usuarioEventDTO.setTipo(this.getTipo().toString());
+        usuarioEventDTO.setSituacao(this.getSituacao().toString());
+
+        return usuarioEventDTO;
     }
 
     public Long getId() {

@@ -53,7 +53,7 @@ public class AuthenticationController {
         userModel.setDataCriacao(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setDataUltimaAtualizacao((LocalDateTime.now(ZoneId.of("UTC"))));
 
-        this.userService.save(userModel);
+        this.userService.saveUsuarioAndPublishRabbitMQ(userModel);
 
         log.debug("POST createUsuario userDTO salvo {}", userModel.getId());
 
