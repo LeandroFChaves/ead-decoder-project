@@ -37,7 +37,7 @@ public class DocenteController {
             userModel.setTipo(UserTipo.DOCENTE);
             userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
-            userService.save(userModel);
+            userService.updateUsuarioAndPublishRabbitMQ(userModel);
 
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }

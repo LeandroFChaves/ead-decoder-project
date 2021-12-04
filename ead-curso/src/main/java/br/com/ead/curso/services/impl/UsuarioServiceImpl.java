@@ -17,6 +17,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Page<UsuarioModel> findAll(Specification<UsuarioModel> spec, Pageable pageable) {
-        return usuarioRepository.findAll(spec, pageable);
+        return this.usuarioRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public UsuarioModel save(UsuarioModel userModel) {
+        return this.usuarioRepository.save(userModel);
+    }
+
+    @Override
+    public void delete(Long idUsuario) {
+        this.usuarioRepository.deleteById(idUsuario);
     }
 }

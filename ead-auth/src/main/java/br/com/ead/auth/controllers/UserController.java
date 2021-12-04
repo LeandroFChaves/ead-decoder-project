@@ -83,7 +83,7 @@ public class UserController {
 
             userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
-            this.userService.save(userModel);
+            this.userService.updateUsuarioAndPublishRabbitMQ(userModel);
 
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
@@ -129,7 +129,7 @@ public class UserController {
             userModel.setImagemUrl(userDto.getImagemUrl());
             userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
-            this.userService.save(userModel);
+            this.userService.updateUsuarioAndPublishRabbitMQ(userModel);
 
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
@@ -142,7 +142,7 @@ public class UserController {
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         } else {
-            this.userService.delete(userModelOptional.get());
+            this.userService.deleteUsuarioAndPublishRabbitMQ(userModelOptional.get());
 
             return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso");
         }

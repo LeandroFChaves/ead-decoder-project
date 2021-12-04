@@ -45,9 +45,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsByUsuario(String usuario) {
+        return this.userRepository.existsByUsuario(usuario);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    @Override
     @Transactional
     public void delete(UserModel userModel) {
         this.userRepository.delete(userModel);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUsuarioAndPublishRabbitMQ(UserModel usuarioModel) {
+        delete(usuarioModel);
+        usuarioEventPublisher.publishUsuarioEvent(usuarioModel.convertToUsuarioEventDTO(), TipoOperacao.DELETE);
     }
 
     @Override
@@ -65,12 +82,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByUsuario(String usuario) {
-        return this.userRepository.existsByUsuario(usuario);
+    @Transactional
+    public UserModel updateUsuarioAndPublishRabbitMQ(UserModel usuarioModel) {
+        usuarioModel = save(usuarioModel);
+        usuarioEventPublisher.publishUsuarioEvent(usuarioModel.convertToUsuarioEventDTO(), TipoOperacao.UPDATE);
+
+        return usuarioModel;
     }
 
-    @Override
-    public boolean existsByEmail(String email) {
-        return this.userRepository.existsByEmail(email);
-    }
 }

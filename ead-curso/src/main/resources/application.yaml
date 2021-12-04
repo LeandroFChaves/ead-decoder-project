@@ -54,3 +54,9 @@ ead:
   api:
     url:
       usuarios: 'http://ead-auth-service/ead-auth'
+  broker:
+    exchange:
+      usuarioEventExchange: ead.usuarioevent
+    queue:
+      usuarioEventQueue:
+        name: ead.usuarioevent.ms.curso

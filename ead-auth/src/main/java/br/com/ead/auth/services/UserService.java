@@ -17,13 +17,18 @@ public interface UserService {
 
     Optional<UserModel> findById(Long idUsuario);
 
+    boolean existsByUsuario(String usuario);
+
+    boolean existsByEmail(String email);
+
     void delete(UserModel userModel);
+
+    void deleteUsuarioAndPublishRabbitMQ(UserModel usuarioModel);
 
     UserModel save(UserModel userModel);
 
     UserModel saveUsuarioAndPublishRabbitMQ(UserModel userModel);
 
-    boolean existsByUsuario(String usuario);
+    UserModel updateUsuarioAndPublishRabbitMQ(UserModel usuarioModel);
 
-    boolean existsByEmail(String email);
 }
