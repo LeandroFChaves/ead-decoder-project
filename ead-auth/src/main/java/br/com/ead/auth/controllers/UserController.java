@@ -71,9 +71,16 @@ public class UserController {
         } else {
             UserModel userModel = userModelOptional.get();
 
-            userModel.setNomeCompleto(userDto.getNomeCompleto());
-            userModel.setTelefone(userDto.getTelefone());
-            userModel.setCpf(userDto.getCpf());
+            if (userDto.getNomeCompleto() != null) {
+                userModel.setNomeCompleto(userDto.getNomeCompleto());
+            }
+            if (userDto.getTelefone() != null) {
+                userModel.setTelefone(userDto.getTelefone());
+            }
+            if (userDto.getCpf() != null) {
+                userModel.setCpf(userDto.getCpf());
+            }
+
             userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
             this.userService.save(userModel);
