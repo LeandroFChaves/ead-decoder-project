@@ -3,6 +3,8 @@ package br.com.ead.curso.controllers;
 import br.com.ead.curso.dtos.MatriculaCursoDTO;
 import br.com.ead.curso.models.CursoModel;
 import br.com.ead.curso.services.CursoService;
+import br.com.ead.curso.services.UsuarioService;
+import br.com.ead.curso.specifications.SpecificationTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,15 +23,19 @@ public class CursoUsuarioController {
     @Autowired
     CursoService cursoService;
 
+    @Autowired
+    UsuarioService usuarioService;
+
     @GetMapping("/cursos/{idCurso}/usuarios")
-    public ResponseEntity<Object> getAllUsuariosByCurso(@PathVariable(value = "idCurso") Long idCurso,
+    public ResponseEntity<Object> getAllUsuariosByCurso(SpecificationTemplate.UsuarioSpec spec,
+                                                        @PathVariable(value = "idCurso") Long idCurso,
                                                         @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
         if (!cursoModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado.");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body("");
+        return ResponseEntity.status(HttpStatus.OK).body(this.usuarioService.findAll(SpecificationTemplate.usuarioCursoId(idCurso).and(spec), pageable));
     }
 
     @PostMapping("/cursos/{idCurso}/usuarios/matricula")

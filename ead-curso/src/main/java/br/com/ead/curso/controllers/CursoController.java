@@ -40,9 +40,12 @@ public class CursoController {
     public ResponseEntity<Page<CursoModel>> getAllCursos(SpecificationTemplate.CursoSpec spec,
                                                          @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                                                          @RequestParam(required = false) Long idUsuario) {
-        Page<CursoModel> userModelPage = this.cursoService.findAll(spec, pageable);
-
-        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
+        if (idUsuario != null) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(this.cursoService.findAll(SpecificationTemplate.cursoUsuarioId(idUsuario).and(spec), pageable));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(this.cursoService.findAll(spec, pageable));
+        }
     }
 
     @GetMapping("/{idCurso}")
