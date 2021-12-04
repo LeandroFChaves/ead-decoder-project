@@ -6,10 +6,12 @@ server:
 spring:
   application:
     name: ead-curso-service
+
   datasource:
     url: jdbc:postgresql://localhost:5432/ead-curso
     username: admin
     password: admin
+
   jpa:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -20,6 +22,13 @@ spring:
       hibernate:
         show_sql: true
     open-in-view: true
+
+  rabbitmq:
+    host: localhost
+    port: 15672
+    username: admin
+    password: admin
+
   output:
     ansi:
       enabled: always
@@ -36,6 +45,7 @@ eureka:
   client:
     service-url:
       default-zone: 'http://localhost:8761/eureka'
+
   instance:
     hostname: localhost
 
