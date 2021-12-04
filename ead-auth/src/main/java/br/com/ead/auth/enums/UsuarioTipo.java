@@ -1,6 +1,6 @@
 package br.com.ead.auth.enums;
 
-public enum UserTipo {
+public enum UsuarioTipo {
     ADMIN,
     ALUNO,
     DOCENTE

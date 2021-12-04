@@ -1,6 +1,6 @@
 package br.com.ead.auth.enums;
 
-public enum UserSituacao {
+public enum UsuarioSituacao {
     ATIVO,
     BLOQUEADO
 }

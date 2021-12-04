@@ -16,6 +16,6 @@ public interface AulaRepository extends JpaRepository<AulaModel, Long>, JpaSpeci
     @Query(value = "select * from aulas where id_modulo = :idModulo", nativeQuery = true)
     List<AulaModel> findAllAulasIntoModulo(@Param("idModulo") Long idModulo);
 
-    @Query(value = "select * from aulas where id_modulo = :idModulo and id = :idAula", nativeQuery = true)
+    @Query(value = "select * from aulas where id_modulo = :idModulo and id_aula = :idAula", nativeQuery = true)
     Optional<AulaModel> findAulaIntoModulo(Long idModulo, Long idAula);
 }

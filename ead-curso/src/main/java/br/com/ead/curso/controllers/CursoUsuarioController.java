@@ -31,7 +31,7 @@ public class CursoUsuarioController {
     @GetMapping("/cursos/{idCurso}/usuarios")
     public ResponseEntity<Object> getAllUsuariosByCurso(SpecificationTemplate.UsuarioSpec spec,
                                                         @PathVariable(value = "idCurso") Long idCurso,
-                                                        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                        @PageableDefault(page = 0, size = 10, sort = "idUsuario", direction = Sort.Direction.ASC) Pageable pageable) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
         if (cursoModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado.");
@@ -62,7 +62,7 @@ public class CursoUsuarioController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário está bloqueado.");
         }
 
-        this.cursoService.saveMatriculaUsuarioInCurso(cursoModelOptional.get().getId(), userModelOptional.get().getIdUsuario());
+        this.cursoService.saveMatriculaUsuarioInCurso(cursoModelOptional.get().getIdCurso(), userModelOptional.get().getIdUsuario());
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Matrícula realizada com sucesso!");
     }

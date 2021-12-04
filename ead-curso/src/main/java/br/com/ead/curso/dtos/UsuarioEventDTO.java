@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class UsuarioEventDTO {
 
-    private Long id;
+    private Long idUsuario;
     private UUID idExterno;
     private String nomeCompleto;
     private String cpf;
@@ -25,17 +25,16 @@ public class UsuarioEventDTO {
     public UsuarioModel convertToUsuarioModel(){
         UsuarioModel usuarioModel = new UsuarioModel();
         BeanUtils.copyProperties(this, usuarioModel);
-        usuarioModel.setIdUsuario(this.getId());
 
         return usuarioModel;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public UUID getIdExterno() {

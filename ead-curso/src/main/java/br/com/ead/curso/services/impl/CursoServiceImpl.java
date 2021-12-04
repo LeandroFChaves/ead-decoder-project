@@ -63,11 +63,11 @@ public class CursoServiceImpl implements CursoService {
     @Override
     @Transactional
     public void delete(CursoModel curso) {
-        List<ModuloModel> listModulosIntoCurso = this.moduloRepository.findAllModulosIntoCurso(curso.getId());
+        List<ModuloModel> listModulosIntoCurso = this.moduloRepository.findAllModulosIntoCurso(curso.getIdCurso());
 
         if (!listModulosIntoCurso.isEmpty()) {
             for (ModuloModel modulo : listModulosIntoCurso) {
-                List<AulaModel> listAulasIntoModulo = this.aulaRepository.findAllAulasIntoModulo(modulo.getId());
+                List<AulaModel> listAulasIntoModulo = this.aulaRepository.findAllAulasIntoModulo(modulo.getIdModulo());
 
                 if (!listAulasIntoModulo.isEmpty()) {
                     this.aulaRepository.deleteAll(listAulasIntoModulo);

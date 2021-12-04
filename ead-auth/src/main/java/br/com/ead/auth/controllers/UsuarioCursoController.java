@@ -2,7 +2,7 @@ package br.com.ead.auth.controllers;
 
 import br.com.ead.auth.clients.CursoClient;
 import br.com.ead.auth.dtos.CursoDTO;
-import br.com.ead.auth.services.UserService;
+import br.com.ead.auth.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +23,11 @@ public class UsuarioCursoController {
     CursoClient cursoClient;
 
     @Autowired
-    UserService userService;
+    UsuarioService userService;
 
     @GetMapping("/usuarios/{idUsuario}/cursos")
     public ResponseEntity<Page<CursoDTO>> getAllCursosByUsuario(@PathVariable(value = "idUsuario") Long idUsuario,
-                                                                @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                                @PageableDefault(page = 0, size = 10, sort = "idCurso", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.cursoClient.getAllCursosByUsuario(idUsuario, pageable));
     }
 

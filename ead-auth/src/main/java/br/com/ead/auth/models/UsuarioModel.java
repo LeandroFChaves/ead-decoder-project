@@ -1,8 +1,8 @@
 package br.com.ead.auth.models;
 
 import br.com.ead.auth.dtos.UsuarioEventDTO;
-import br.com.ead.auth.enums.UserSituacao;
-import br.com.ead.auth.enums.UserTipo;
+import br.com.ead.auth.enums.UsuarioSituacao;
+import br.com.ead.auth.enums.UsuarioTipo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,12 +22,12 @@ import java.util.UUID;
         @UniqueConstraint(name = "UK_USUARIOS_EMAIL", columnNames = {"email"})}
 )
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserModel extends RepresentationModel<UserModel> implements Serializable {
+public class UsuarioModel extends RepresentationModel<UsuarioModel> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idUsuario;
 
     @Type(type = "uuid-char")
     @Column(name = "id_externo", nullable = false, updatable = false)
@@ -57,11 +57,11 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private UserTipo tipo;
+    private UsuarioTipo tipo;
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private UserSituacao situacao;
+    private UsuarioSituacao situacao;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
@@ -71,7 +71,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dataUltimaAtualizacao;
 
-    public UserModel() {
+    public UsuarioModel() {
     }
 
     @PrePersist
@@ -92,12 +92,12 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
         return usuarioEventDTO;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public UUID getIdExterno() {
@@ -164,19 +164,19 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
         this.imagemUrl = imagemUrl;
     }
 
-    public UserTipo getTipo() {
+    public UsuarioTipo getTipo() {
         return tipo;
     }
 
-    public void setTipo(UserTipo tipo) {
+    public void setTipo(UsuarioTipo tipo) {
         this.tipo = tipo;
     }
 
-    public UserSituacao getSituacao() {
+    public UsuarioSituacao getSituacao() {
         return situacao;
     }
 
-    public void setSituacao(UserSituacao situacao) {
+    public void setSituacao(UsuarioSituacao situacao) {
         this.situacao = situacao;
     }
 
@@ -199,7 +199,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Override
     public String toString() {
         return "UserModel{" +
-                "id=" + id +
+                "idUsuario=" + idUsuario +
                 ", idExterno=" + idExterno +
                 ", nomeCompleto='" + nomeCompleto + '\'' +
                 ", usuario='" + usuario + '\'' +

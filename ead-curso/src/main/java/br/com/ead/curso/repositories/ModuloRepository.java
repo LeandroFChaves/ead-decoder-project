@@ -20,6 +20,6 @@ public interface ModuloRepository extends JpaRepository<ModuloModel, Long>, JpaS
     @Query(value = "select * from modulos where id_curso = :idCurso", nativeQuery = true)
     List<ModuloModel> findAllModulosIntoCurso(@Param("idCurso") Long idCurso);
 
-    @Query(value = "select * from modulos where id_curso = :idCurso and id = :idModulo", nativeQuery = true)
+    @Query(value = "select * from modulos where id_curso = :idCurso and id_modulo = :idModulo", nativeQuery = true)
     Optional<ModuloModel> findModuloIntoCurso(@Param("idCurso") Long idCurso, @Param("idModulo") Long idModulo);
 }

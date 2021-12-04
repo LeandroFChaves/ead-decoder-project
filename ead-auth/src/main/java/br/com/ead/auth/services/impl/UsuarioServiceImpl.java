@@ -1,10 +1,10 @@
 package br.com.ead.auth.services.impl;
 
 import br.com.ead.auth.enums.TipoOperacao;
-import br.com.ead.auth.models.UserModel;
+import br.com.ead.auth.models.UsuarioModel;
 import br.com.ead.auth.publishers.UsuarioEventPublisher;
-import br.com.ead.auth.repositories.UserRepository;
-import br.com.ead.auth.services.UserService;
+import br.com.ead.auth.repositories.UsuarioRepository;
+import br.com.ead.auth.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,31 +16,31 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository userRepository;
 
     @Autowired
     private UsuarioEventPublisher usuarioEventPublisher;
 
     @Override
-    public List<UserModel> findAll() {
+    public List<UsuarioModel> findAll() {
         return this.userRepository.findAll();
     }
 
     @Override
-    public Page<UserModel> findAll(Pageable pageable) {
+    public Page<UsuarioModel> findAll(Pageable pageable) {
         return this.userRepository.findAll(pageable);
     }
 
     @Override
-    public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
+    public Page<UsuarioModel> findAll(Specification<UsuarioModel> spec, Pageable pageable) {
         return this.userRepository.findAll(spec, pageable);
     }
 
     @Override
-    public Optional<UserModel> findById(Long idUsuario) {
+    public Optional<UsuarioModel> findById(Long idUsuario) {
         return this.userRepository.findById(idUsuario);
     }
 
@@ -56,25 +56,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(UserModel userModel) {
-        this.userRepository.delete(userModel);
+    public void delete(UsuarioModel usuarioModel) {
+        this.userRepository.delete(usuarioModel);
     }
 
     @Override
     @Transactional
-    public void deleteUsuarioAndPublishRabbitMQ(UserModel usuarioModel) {
+    public void deleteUsuarioAndPublishRabbitMQ(UsuarioModel usuarioModel) {
         delete(usuarioModel);
         usuarioEventPublisher.publishUsuarioEvent(usuarioModel.convertToUsuarioEventDTO(), TipoOperacao.DELETE);
     }
 
     @Override
-    public UserModel save(UserModel userModel) {
-        return this.userRepository.save(userModel);
+    public UsuarioModel save(UsuarioModel usuarioModel) {
+        return this.userRepository.save(usuarioModel);
     }
 
     @Override
     @Transactional
-    public UserModel saveUsuarioAndPublishRabbitMQ(UserModel usuarioModel) {
+    public UsuarioModel saveUsuarioAndPublishRabbitMQ(UsuarioModel usuarioModel) {
         usuarioModel = save(usuarioModel);
         usuarioEventPublisher.publishUsuarioEvent(usuarioModel.convertToUsuarioEventDTO(), TipoOperacao.CREATE);
 
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserModel updateUsuarioAndPublishRabbitMQ(UserModel usuarioModel) {
+    public UsuarioModel updateUsuarioAndPublishRabbitMQ(UsuarioModel usuarioModel) {
         usuarioModel = save(usuarioModel);
         usuarioEventPublisher.publishUsuarioEvent(usuarioModel.convertToUsuarioEventDTO(), TipoOperacao.UPDATE);
 

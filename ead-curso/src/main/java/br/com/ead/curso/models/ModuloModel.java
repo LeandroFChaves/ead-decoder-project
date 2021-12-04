@@ -19,7 +19,7 @@ public class ModuloModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idModulo;
 
     @Type(type = "uuid-char")
     @Column(name="id_externo", nullable = false, updatable = false)
@@ -55,12 +55,12 @@ public class ModuloModel implements Serializable {
         }
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdModulo() {
+        return idModulo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdModulo(Long idModulo) {
+        this.idModulo = idModulo;
     }
 
     public UUID getIdExterno() {
@@ -114,7 +114,7 @@ public class ModuloModel implements Serializable {
     @Override
     public String toString() {
         return "ModuloModel{" +
-                "id=" + id +
+                "id=" + idModulo +
                 ", idExterno=" + idExterno +
                 ", titulo='" + titulo + '\'' +
                 ", descricao='" + descricao + '\'' +

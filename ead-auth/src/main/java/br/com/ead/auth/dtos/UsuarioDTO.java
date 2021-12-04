@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDTO {
+public class UsuarioDTO {
 
     public interface UserView {
         interface CadastroPost {}
@@ -20,7 +20,7 @@ public class UserDTO {
         interface ImagemPut {}
     }
 
-    private Long id;
+    private Long idUsuario;
     private UUID idExterno;
 
     @JsonView({UserView.CadastroPost.class, UserView.CadastroPut.class})
@@ -58,12 +58,12 @@ public class UserDTO {
     @JsonView({UserView.ImagemPut.class})
     private String imagemUrl;
 
-    public Long getId() {
-        return id;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public UUID getIdExterno() {
@@ -141,7 +141,7 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-                "id=" + id +
+                "id=" + idUsuario +
                 ", idExterno=" + idExterno +
                 ", nomeCompleto='" + nomeCompleto + '\'' +
                 ", usuario='" + usuario + '\'' +

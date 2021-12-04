@@ -38,7 +38,7 @@ public class CursoController {
 
     @GetMapping
     public ResponseEntity<Page<CursoModel>> getAllCursos(SpecificationTemplate.CursoSpec spec,
-                                                         @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                                                         @PageableDefault(page = 0, size = 10, sort = "idCurso", direction = Sort.Direction.ASC) Pageable pageable,
                                                          @RequestParam(required = false) Long idUsuario) {
         if (idUsuario != null) {
             return ResponseEntity.status(HttpStatus.OK)

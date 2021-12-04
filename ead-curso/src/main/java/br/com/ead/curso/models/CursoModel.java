@@ -23,7 +23,7 @@ public class CursoModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idCurso;
 
     @Type(type = "uuid-char")
     @Column(name = "id_externo", nullable = false, updatable = false)
@@ -57,7 +57,7 @@ public class CursoModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "CURSOS_USUARIOS",
-            joinColumns = @JoinColumn(name = "id_curso", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_CURSO")),
+            joinColumns = @JoinColumn(name = "id_curso", referencedColumnName = "idCurso", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_CURSO")),
             inverseJoinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "idUsuario", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_USUARIO")))
     private Set<UsuarioModel> usuarios;
 
@@ -80,12 +80,12 @@ public class CursoModel implements Serializable {
         }
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdCurso() {
+        return idCurso;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdCurso(Long idCurso) {
+        this.idCurso = idCurso;
     }
 
     public UUID getIdExterno() {
@@ -179,7 +179,7 @@ public class CursoModel implements Serializable {
     @Override
     public String toString() {
         return "CursoModel{" +
-                "id=" + id +
+                "id=" + idCurso +
                 ", idExterno=" + idExterno +
                 ", nome='" + nome + '\'' +
                 ", descricao='" + descricao + '\'' +

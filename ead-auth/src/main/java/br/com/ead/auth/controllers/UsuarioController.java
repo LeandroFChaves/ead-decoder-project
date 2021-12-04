@@ -1,8 +1,8 @@
 package br.com.ead.auth.controllers;
 
-import br.com.ead.auth.dtos.UserDTO;
-import br.com.ead.auth.models.UserModel;
-import br.com.ead.auth.services.UserService;
+import br.com.ead.auth.dtos.UsuarioDTO;
+import br.com.ead.auth.models.UsuarioModel;
+import br.com.ead.auth.services.UsuarioService;
 import br.com.ead.auth.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.logging.log4j.LogManager;
@@ -27,22 +27,22 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/usuarios")
-public class UserController {
+public class UsuarioController {
 
     Logger log = LogManager.getLogger(this.getClass());
 
     @Autowired
-    UserService userService;
+    UsuarioService userService;
 
     @GetMapping
-    public ResponseEntity<Page<UserModel>> getAllUsuarios(
+    public ResponseEntity<Page<UsuarioModel>> getAllUsuarios(
             SpecificationTemplate.UserSpec spec,
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<UserModel> userModelPage = userModelPage = this.userService.findAll(spec, pageable);
+            @PageableDefault(page = 0, size = 10, sort = "idUsuario", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<UsuarioModel> userModelPage = userModelPage = this.userService.findAll(spec, pageable);
 
         if (!userModelPage.isEmpty()) {
-            for (UserModel user : userModelPage.toList()) {
-                user.add(linkTo(methodOn(UserController.class).getUsuario(user.getId())).withSelfRel());
+            for (UsuarioModel user : userModelPage.toList()) {
+                user.add(linkTo(methodOn(UsuarioController.class).getUsuario(user.getIdUsuario())).withSelfRel());
             }
         }
 
@@ -51,7 +51,7 @@ public class UserController {
 
     @GetMapping("/{idUsuario}")
     public ResponseEntity<Object> getUsuario(@PathVariable(value = "idUsuario") Long idUsuario) {
-        Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
+        Optional<UsuarioModel> userModelOptional = this.userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
@@ -62,38 +62,38 @@ public class UserController {
 
     @PutMapping("/{idUsuario}")
     public ResponseEntity<Object> updateUsuario(@PathVariable(value = "idUsuario") Long idUsuario,
-                                                @RequestBody @Validated(UserDTO.UserView.CadastroPut.class)
-                                                @JsonView(UserDTO.UserView.CadastroPut.class) UserDTO userDto) {
-        Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
+                                                @RequestBody @Validated(UsuarioDTO.UserView.CadastroPut.class)
+                                                @JsonView(UsuarioDTO.UserView.CadastroPut.class) UsuarioDTO userDto) {
+        Optional<UsuarioModel> userModelOptional = this.userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         } else {
-            UserModel userModel = userModelOptional.get();
+            UsuarioModel usuarioModel = userModelOptional.get();
 
             if (userDto.getNomeCompleto() != null) {
-                userModel.setNomeCompleto(userDto.getNomeCompleto());
+                usuarioModel.setNomeCompleto(userDto.getNomeCompleto());
             }
             if (userDto.getTelefone() != null) {
-                userModel.setTelefone(userDto.getTelefone());
+                usuarioModel.setTelefone(userDto.getTelefone());
             }
             if (userDto.getCpf() != null) {
-                userModel.setCpf(userDto.getCpf());
+                usuarioModel.setCpf(userDto.getCpf());
             }
 
-            userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
+            usuarioModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
-            this.userService.updateUsuarioAndPublishRabbitMQ(userModel);
+            this.userService.updateUsuarioAndPublishRabbitMQ(usuarioModel);
 
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioModel);
         }
     }
 
     @PutMapping("/{idUsuario}/senha")
     public ResponseEntity<Object> updateSenha(@PathVariable(value = "idUsuario") Long idUsuario,
-                                              @RequestBody @Validated(UserDTO.UserView.SenhaPut.class)
-                                              @JsonView(UserDTO.UserView.SenhaPut.class) UserDTO userDto) {
-        Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
+                                              @RequestBody @Validated(UsuarioDTO.UserView.SenhaPut.class)
+                                              @JsonView(UsuarioDTO.UserView.SenhaPut.class) UsuarioDTO userDto) {
+        Optional<UsuarioModel> userModelOptional = this.userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
@@ -104,12 +104,12 @@ public class UserController {
 
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Senha anterior incorreta!");
         } else {
-            UserModel userModel = userModelOptional.get();
+            UsuarioModel usuarioModel = userModelOptional.get();
 
-            userModel.setSenha(userDto.getSenha());
-            userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
+            usuarioModel.setSenha(userDto.getSenha());
+            usuarioModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
-            userService.save(userModel);
+            userService.save(usuarioModel);
 
             return ResponseEntity.status(HttpStatus.OK).body("Senha atualizada com sucesso.");
         }
@@ -117,27 +117,27 @@ public class UserController {
 
     @PutMapping("/{idUsuario}/imagem")
     public ResponseEntity<Object> updateImagem(@PathVariable(value = "idUsuario") Long idUsuario,
-                                               @RequestBody @Validated(UserDTO.UserView.ImagemPut.class)
-                                               @JsonView(UserDTO.UserView.ImagemPut.class) UserDTO userDto) {
-        Optional<UserModel> userModelOptional = userService.findById(idUsuario);
+                                               @RequestBody @Validated(UsuarioDTO.UserView.ImagemPut.class)
+                                               @JsonView(UsuarioDTO.UserView.ImagemPut.class) UsuarioDTO userDto) {
+        Optional<UsuarioModel> userModelOptional = userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
         } else {
-            UserModel userModel = userModelOptional.get();
+            UsuarioModel usuarioModel = userModelOptional.get();
 
-            userModel.setImagemUrl(userDto.getImagemUrl());
-            userModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
+            usuarioModel.setImagemUrl(userDto.getImagemUrl());
+            usuarioModel.setDataUltimaAtualizacao(LocalDateTime.now(ZoneId.of("UTC")));
 
-            this.userService.updateUsuarioAndPublishRabbitMQ(userModel);
+            this.userService.updateUsuarioAndPublishRabbitMQ(usuarioModel);
 
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
+            return ResponseEntity.status(HttpStatus.OK).body(usuarioModel);
         }
     }
 
     @DeleteMapping("/{idUsuario}")
     public ResponseEntity<Object> deleteUsuario(@PathVariable(value = "idUsuario") Long idUsuario) {
-        Optional<UserModel> userModelOptional = this.userService.findById(idUsuario);
+        Optional<UsuarioModel> userModelOptional = this.userService.findById(idUsuario);
 
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");

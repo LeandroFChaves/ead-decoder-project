@@ -33,14 +33,14 @@ public class ModuloController {
 
     @GetMapping("/modulos")
     public ResponseEntity<Page<ModuloModel>> getAllModulos(SpecificationTemplate.ModuloSpec spec,
-                                                           @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                           @PageableDefault(page = 0, size = 10, sort = "idModulo", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.moduloService.findAll(spec, pageable));
     }
 
     @GetMapping("/cursos/{idCurso}/modulos")
     public ResponseEntity<Page<ModuloModel>> getAllModulos(@PathVariable(value = "idCurso") Long idCurso,
                                                            SpecificationTemplate.ModuloSpec spec,
-                                                           @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                           @PageableDefault(page = 0, size = 10, sort = "idModulo", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.moduloService.findAllByCurso(SpecificationTemplate.moduloCursoId(idCurso).and(spec), pageable));
     }
 

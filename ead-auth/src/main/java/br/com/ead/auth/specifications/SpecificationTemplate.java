@@ -1,6 +1,6 @@
 package br.com.ead.auth.specifications;
 
-import br.com.ead.auth.models.UserModel;
+import br.com.ead.auth.models.UsuarioModel;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
@@ -16,7 +16,7 @@ public class SpecificationTemplate {
             @Spec(path = "tipo", spec = Equal.class),
             @Spec(path = "situacao", spec = Equal.class)
     })
-    public interface UserSpec extends Specification<UserModel> {
+    public interface UserSpec extends Specification<UsuarioModel> {
     }
 
 }

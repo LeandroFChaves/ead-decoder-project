@@ -18,7 +18,7 @@ public class AulaModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idAula;
 
     @Type(type = "uuid-char")
     @Column(name="id_externo", nullable = false, updatable = false)
@@ -53,12 +53,12 @@ public class AulaModel implements Serializable {
         }
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdAula() {
+        return idAula;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdAula(Long idAula) {
+        this.idAula = idAula;
     }
 
     public UUID getIdExterno() {
@@ -112,7 +112,7 @@ public class AulaModel implements Serializable {
     @Override
     public String toString() {
         return "AulaModel{" +
-                "id=" + id +
+                "id=" + idAula +
                 ", idExterno=" + idExterno +
                 ", titulo='" + titulo + '\'' +
                 ", descricao='" + descricao + '\'' +

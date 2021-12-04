@@ -1,10 +1,10 @@
 package br.com.ead.auth.controllers;
 
-import br.com.ead.auth.dtos.UserDTO;
-import br.com.ead.auth.enums.UserSituacao;
-import br.com.ead.auth.enums.UserTipo;
-import br.com.ead.auth.models.UserModel;
-import br.com.ead.auth.services.UserService;
+import br.com.ead.auth.dtos.UsuarioDTO;
+import br.com.ead.auth.enums.UsuarioSituacao;
+import br.com.ead.auth.enums.UsuarioTipo;
+import br.com.ead.auth.models.UsuarioModel;
+import br.com.ead.auth.services.UsuarioService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,11 +26,11 @@ public class AuthenticationController {
     Logger log = LogManager.getLogger(this.getClass());
 
     @Autowired
-    UserService userService;
+    UsuarioService userService;
 
     @PostMapping("registro")
-    public ResponseEntity<Object> createUsuario(@RequestBody @Validated(UserDTO.UserView.CadastroPost.class)
-                                                @JsonView(UserDTO.UserView.CadastroPost.class) UserDTO userDTO) {
+    public ResponseEntity<Object> createUsuario(@RequestBody @Validated(UsuarioDTO.UserView.CadastroPost.class)
+                                                @JsonView(UsuarioDTO.UserView.CadastroPost.class) UsuarioDTO userDTO) {
         log.debug("POST createUsuario userDTO recebido {}", userDTO.toString());
 
         if (this.userService.existsByUsuario(userDTO.getUsuario())) {
@@ -45,18 +45,18 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: O email informado já existe!");
         }
 
-        UserModel userModel = new UserModel();
-        BeanUtils.copyProperties(userDTO, userModel);
+        UsuarioModel usuarioModel = new UsuarioModel();
+        BeanUtils.copyProperties(userDTO, usuarioModel);
 
-        userModel.setSituacao(UserSituacao.ATIVO);
-        userModel.setTipo(UserTipo.ALUNO);
-        userModel.setDataCriacao(LocalDateTime.now(ZoneId.of("UTC")));
-        userModel.setDataUltimaAtualizacao((LocalDateTime.now(ZoneId.of("UTC"))));
+        usuarioModel.setSituacao(UsuarioSituacao.ATIVO);
+        usuarioModel.setTipo(UsuarioTipo.ALUNO);
+        usuarioModel.setDataCriacao(LocalDateTime.now(ZoneId.of("UTC")));
+        usuarioModel.setDataUltimaAtualizacao((LocalDateTime.now(ZoneId.of("UTC"))));
 
-        this.userService.saveUsuarioAndPublishRabbitMQ(userModel);
+        this.userService.saveUsuarioAndPublishRabbitMQ(usuarioModel);
 
-        log.debug("POST createUsuario userDTO salvo {}", userModel.getId());
+        log.debug("POST createUsuario userDTO salvo {}", usuarioModel.getIdUsuario());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioModel);
     }
 }

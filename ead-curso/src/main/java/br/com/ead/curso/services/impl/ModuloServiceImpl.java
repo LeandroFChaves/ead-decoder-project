@@ -62,7 +62,7 @@ public class ModuloServiceImpl implements ModuloService {
     @Override
     @Transactional
     public void delete(ModuloModel modulo) {
-        List<AulaModel> listAulasIntoModulo = this.aulaRepository.findAllAulasIntoModulo(modulo.getId());
+        List<AulaModel> listAulasIntoModulo = this.aulaRepository.findAllAulasIntoModulo(modulo.getIdModulo());
 
         if (!listAulasIntoModulo.isEmpty()) {
             this.aulaRepository.deleteAll(listAulasIntoModulo);

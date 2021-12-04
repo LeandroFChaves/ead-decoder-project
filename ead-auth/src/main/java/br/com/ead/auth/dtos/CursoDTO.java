@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CursoDTO {
 
-    private Long id;
+    private Long idCurso;
     private String nome;
     private String descricao;
     private String imagemUrl;
@@ -15,12 +15,12 @@ public class CursoDTO {
     private CursoSituacao situacao;
     private CursoNivel nivel;
 
-    public Long getId() {
-        return id;
+    public Long getIdCurso() {
+        return idCurso;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdCurso(Long idCurso) {
+        this.idCurso = idCurso;
     }
 
     public String getNome() {

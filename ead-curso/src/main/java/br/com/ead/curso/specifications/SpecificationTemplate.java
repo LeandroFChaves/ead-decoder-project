@@ -48,7 +48,7 @@ public class SpecificationTemplate {
             Root<CursoModel> curso = query.from(CursoModel.class);
             Expression<Collection<ModuloModel>> cursosModulos = curso.get("modulos");
 
-            return cb.and(cb.equal(curso.get("id"), idCurso), cb.isMember(modulo, cursosModulos));
+            return cb.and(cb.equal(curso.get("idCurso"), idCurso), cb.isMember(modulo, cursosModulos));
         };
     }
 
@@ -59,7 +59,7 @@ public class SpecificationTemplate {
             Root<ModuloModel> module = query.from(ModuloModel.class);
             Expression<Collection<AulaModel>> moduloAulas = module.get("aulas");
 
-            return cb.and(cb.equal(module.get("id"), idModulo), cb.isMember(aula, moduloAulas));
+            return cb.and(cb.equal(module.get("idModulo"), idModulo), cb.isMember(aula, moduloAulas));
         };
     }
 
@@ -70,7 +70,7 @@ public class SpecificationTemplate {
             Root<CursoModel> curso = query.from(CursoModel.class);
             Expression<Collection<UsuarioModel>> cursosUsuarios = curso.get("usuarios");
 
-            return cb.and(cb.equal(curso.get("id"), idCurso), cb.isMember(usuario, cursosUsuarios));
+            return cb.and(cb.equal(curso.get("idCurso"), idCurso), cb.isMember(usuario, cursosUsuarios));
         };
     }
 

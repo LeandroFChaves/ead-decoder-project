@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class UsuarioEventDTO {
 
-    private Long id;
+    private Long idUsuario;
     private UUID idExterno;
     private String nomeCompleto;
     private String cpf;
@@ -19,12 +19,12 @@ public class UsuarioEventDTO {
     public UsuarioEventDTO() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public UUID getIdExterno() {
