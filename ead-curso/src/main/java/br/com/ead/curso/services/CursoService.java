@@ -16,7 +16,11 @@ public interface CursoService {
 
     Optional<CursoModel> findById(Long idCurso);
 
+    boolean existsByCursoAndUsuario(Long idCurso, Long idUsuario);
+
     CursoModel save(CursoModel curso);
+
+    void saveMatriculaUsuarioInCurso(Long id, Long idUsuario);
 
     void delete(CursoModel curso);
 }

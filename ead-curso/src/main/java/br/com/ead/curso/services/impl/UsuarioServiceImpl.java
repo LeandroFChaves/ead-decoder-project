@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -18,6 +20,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Page<UsuarioModel> findAll(Specification<UsuarioModel> spec, Pageable pageable) {
         return this.usuarioRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Optional<UsuarioModel> findById(Long usuarioDocente) {
+        return this.usuarioRepository.findById(usuarioDocente);
     }
 
     @Override

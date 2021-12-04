@@ -45,8 +45,19 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
+    public boolean existsByCursoAndUsuario(Long idCurso, Long idUsuario) {
+        return this.cursoRepository.existsByCursoAndUsuario(idCurso, idUsuario);
+    }
+
+    @Override
     public CursoModel save(CursoModel curso) {
         return this.cursoRepository.save(curso);
+    }
+
+    @Override
+    @Transactional
+    public void saveMatriculaUsuarioInCurso(Long id, Long idUsuario) {
+        this.cursoRepository.saveCursoUsuario(id, idUsuario);
     }
 
     @Override

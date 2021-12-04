@@ -70,7 +70,7 @@ public class SpecificationTemplate {
             Root<CursoModel> curso = query.from(CursoModel.class);
             Expression<Collection<UsuarioModel>> cursosUsuarios = curso.get("usuarios");
 
-            return cb.and(cb.equal(curso.get("idCurso"), idCurso), cb.isMember(usuario, cursosUsuarios));
+            return cb.and(cb.equal(curso.get("id"), idCurso), cb.isMember(usuario, cursosUsuarios));
         };
     }
 

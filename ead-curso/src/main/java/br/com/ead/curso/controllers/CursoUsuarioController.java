@@ -1,7 +1,9 @@
 package br.com.ead.curso.controllers;
 
 import br.com.ead.curso.dtos.MatriculaCursoDTO;
+import br.com.ead.curso.enums.UsuarioSituacao;
 import br.com.ead.curso.models.CursoModel;
+import br.com.ead.curso.models.UsuarioModel;
 import br.com.ead.curso.services.CursoService;
 import br.com.ead.curso.services.UsuarioService;
 import br.com.ead.curso.specifications.SpecificationTemplate;
@@ -31,7 +33,7 @@ public class CursoUsuarioController {
                                                         @PathVariable(value = "idCurso") Long idCurso,
                                                         @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
-        if (!cursoModelOptional.isPresent()) {
+        if (cursoModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado.");
         }
 
@@ -42,12 +44,27 @@ public class CursoUsuarioController {
     public ResponseEntity<Object> matricularUsuarioInCurso(@PathVariable(value = "idCurso") Long idCurso,
                                                            @RequestBody @Valid MatriculaCursoDTO matriculaCursoDTO) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
+        Optional<UsuarioModel> userModelOptional = this.usuarioService.findById(matriculaCursoDTO.getIdUsuario());
 
-        if (!cursoModelOptional.isPresent()) {
+        if (cursoModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado.");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("");
+        if (this.cursoService.existsByCursoAndUsuario(idCurso, matriculaCursoDTO.getIdUsuario())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: O aluno informado já se encontra matriculado para esse curso.");
+        }
+
+        if (userModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+
+        if (userModelOptional.get().getSituacao().equals(UsuarioSituacao.BLOQUEADO.toString())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário está bloqueado.");
+        }
+
+        this.cursoService.saveMatriculaUsuarioInCurso(cursoModelOptional.get().getId(), userModelOptional.get().getIdUsuario());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Matrícula realizada com sucesso!");
     }
 
 }

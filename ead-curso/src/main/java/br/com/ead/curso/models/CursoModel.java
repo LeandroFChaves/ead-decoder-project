@@ -57,8 +57,8 @@ public class CursoModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "CURSOS_USUARIOS",
-            joinColumns = @JoinColumn(name = "id_curso", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_CURSO")),
-            inverseJoinColumns = @JoinColumn(name = "id_usuario", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_USUARIO")))
+            joinColumns = @JoinColumn(name = "id_curso", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_CURSO")),
+            inverseJoinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "idUsuario", foreignKey = @ForeignKey(name = "FK_CURSOS_USUARIOS_ID_USUARIO")))
     private Set<UsuarioModel> usuarios;
 
     @Column(nullable = false)
