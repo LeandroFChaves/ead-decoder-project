@@ -3,6 +3,7 @@ package br.com.ead.auth.clients;
 import br.com.ead.auth.dtos.CursoDTO;
 import br.com.ead.auth.dtos.ResponsePageDTO;
 import br.com.ead.auth.services.UtilsService;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class CursoClient {
     @Autowired
     UtilsService utilsService;
 
+    @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
     public Page<CursoDTO> getAllCursosByUsuario(Long idUsuario, Pageable pageable) {
         List<CursoDTO> cursos = new ArrayList<CursoDTO>();
 
@@ -57,6 +59,11 @@ public class CursoClient {
         log.debug("Request finalizado /cursos idUsuario {} ", idUsuario);
 
         return new PageImpl<>(cursos);
+    }
+
+    public Page<CursoDTO> retryFallback(Long idUsuario, Pageable pageable, Throwable t) {
+        log.error("Método de fallback para tratativa interna, causa - {}", t.toString());
+        return new PageImpl<>(new ArrayList<>());
     }
 
 }
