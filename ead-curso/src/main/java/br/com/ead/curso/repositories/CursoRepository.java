@@ -21,4 +21,11 @@ public interface CursoRepository extends JpaRepository<CursoModel, Long>, JpaSpe
     @Query(value = "INSERT INTO CURSOS_USUARIOS VALUES (:idCurso, :idUsuario);", nativeQuery = true)
     void saveCursoUsuario(@Param("idCurso") Long idCurso, @Param("idUsuario") Long idUsuario);
 
+    @Modifying
+    @Query(value = "DELETE FROM CURSOS_USUARIOS WHERE id_curso = :idCurso", nativeQuery = true)
+    void deleteCursoUsuarioByCurso(@Param("idCurso") Long idCurso);
+
+    @Modifying
+    @Query(value = "DELETE FROM CURSOS_USUARIOS WHERE id_usuario= :idUsuario", nativeQuery = true)
+    void deleteCursoUsuarioByUsuario(@Param("idUsuario") Long idUsuario);
 }

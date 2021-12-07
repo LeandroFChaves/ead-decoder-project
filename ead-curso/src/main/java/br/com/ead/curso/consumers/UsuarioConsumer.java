@@ -32,7 +32,7 @@ public class UsuarioConsumer {
                 this.usuarioService.save(userModel);
                 break;
             case DELETE:
-                this.usuarioService.delete(userModel.getIdUsuario());
+                this.usuarioService.delete(usuarioEventDTO.getIdUsuario());
                 break;
         }
     }

@@ -77,6 +77,7 @@ public class CursoServiceImpl implements CursoService {
             this.moduloRepository.deleteAll(listModulosIntoCurso);
         }
 
+        this.cursoRepository.deleteCursoUsuarioByCurso(curso.getIdCurso());
         this.cursoRepository.delete(curso);
     }
 
