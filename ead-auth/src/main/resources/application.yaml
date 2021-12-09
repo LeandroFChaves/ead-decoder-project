@@ -1,76 +1,82 @@
-server:
-  port: 8087
-  servlet:
-    context-path: '/ead-auth/'
-
+#server:
+#  port: 8087
+#  servlet:
+#    context-path: '/ead-auth/'
+#
 spring:
   application:
     name: ead-auth-service
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ead-auth
-    username: admin
-    password: admin
-
-  jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: update
-      jdbc:
-        lob.non-contextual-creation: true
-    properties:
-      hibernate:
-        show_sql: true
-    open-in-view: true
-
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
-    virtual-host: '/'
-
-  output:
-    ansi:
-      enabled: always
-
-# TRACE, DEGUG, INFO, WARN, ERROR
-logging:
-  level:
-    root: INFO
-    org.springframework.web: INFO
-    org.hibernate: INFO
-    br.com.ead: DEBUG
-
-eureka:
-  client:
-    service-url:
-      default-zone: 'http://localhost:8761/eureka'
-
-  instance:
-    hostname: localhost
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      circuitBreakerInstance:
-        slidingWindowSize: 30
-        permittedNumberOfCallsInHalfOpenState: 2
-        slidingWindowType: TIME_BASED
-        minimumNumberOfCalls: 2
-        waitDurationInOpenState: 30s
-        failureRateThreshold: 80
-
-  retry:
-    instances:
-      retryInstance:
-        maxRetryAttemps: 3
-        waitDuration: 5s
-
-ead:
-  api:
-    url:
-      cursos: 'http://ead-curso-service/ead-cursos'
-  broker:
-    exchange:
-      usuarioEvent: ead.usuarioevent
+  config:
+    import: 'optional:configserver:'
+  cloud:
+    config:
+      discovery:
+        service-id: ead-config-server
+#
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/ead-auth
+#    username: admin
+#    password: admin
+#
+#  jpa:
+#    hibernate:
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
+#      ddl-auto: update
+#      jdbc:
+#        lob.non-contextual-creation: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#    open-in-view: true
+#
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: admin
+#    password: admin
+#    virtual-host: '/'
+#
+#  output:
+#    ansi:
+#      enabled: always
+#
+## TRACE, DEGUG, INFO, WARN, ERROR
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.web: INFO
+#    org.hibernate: INFO
+#    br.com.ead: DEBUG
+#
+#eureka:
+#  client:
+#    service-url:
+#      default-zone: 'http://localhost:8761/eureka'
+#
+#  instance:
+#    hostname: localhost
+#
+#resilience4j:
+#  circuitbreaker:
+#    instances:
+#      circuitBreakerInstance:
+#        slidingWindowSize: 30
+#        permittedNumberOfCallsInHalfOpenState: 2
+#        slidingWindowType: TIME_BASED
+#        minimumNumberOfCalls: 2
+#        waitDurationInOpenState: 30s
+#        failureRateThreshold: 80
+#
+#  retry:
+#    instances:
+#      retryInstance:
+#        maxRetryAttemps: 3
+#        waitDuration: 5s
+#
+#ead:
+#  api:
+#    url:
+#      cursos: 'http://ead-curso-service/ead-cursos'
+#  broker:
+#    exchange:
+#      usuarioEvent: ead.usuarioevent
