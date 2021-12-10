@@ -63,6 +63,9 @@ spring:
 #  broker:
 #    exchange:
 #      usuarioEventExchange: ead.usuarioevent
+#      notificacaoCommandExchange: ead.notificacaocommand
 #    queue:
 #      usuarioEventQueue:
 #        name: ead.usuarioevent.ms.curso
+#    key:
+#      notificacaoCommandKey: ms.notificacao

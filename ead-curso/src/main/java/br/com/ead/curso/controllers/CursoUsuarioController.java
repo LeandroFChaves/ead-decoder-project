@@ -62,7 +62,7 @@ public class CursoUsuarioController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário está bloqueado.");
         }
 
-        this.cursoService.saveMatriculaUsuarioInCurso(cursoModelOptional.get().getIdCurso(), userModelOptional.get().getIdUsuario());
+        this.cursoService.saveMatriculaUsuarioInCursoAndEnviaNotificacao(cursoModelOptional.get(), userModelOptional.get());
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Matrícula realizada com sucesso!");
     }
