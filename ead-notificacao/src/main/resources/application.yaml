@@ -62,3 +62,13 @@ eureka:
 
   instance:
     hostname: localhost
+
+ead:
+  broker:
+    exchange:
+      notificacaoCommandExchange: ead.notificacaocommand
+    queue:
+      notificacaoCommandQueue:
+        name: ead.notificacaocommand.ms.notificacao
+    key:
+      notificacaoCommandKey: ms.notificacao
