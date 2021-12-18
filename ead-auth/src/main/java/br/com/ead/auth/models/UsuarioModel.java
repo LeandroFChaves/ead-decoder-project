@@ -6,6 +6,7 @@ import br.com.ead.auth.enums.UsuarioTipo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Type;
 import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.RepresentationModel;
@@ -13,6 +14,8 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -58,6 +61,13 @@ public class UsuarioModel extends RepresentationModel<UsuarioModel> implements S
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private UsuarioTipo tipo;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JoinTable(name = "usuarios_roles",
+               joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "idUsuario", foreignKey = @ForeignKey(name = "FK_USUARIOS_ROLES_ID_USUARIO")),
+               inverseJoinColumns = @JoinColumn(name = "id_role", referencedColumnName = "idRole", foreignKey = @ForeignKey(name = "FK_USUARIOS_ROLES_ID_ROLE")))
+    private Set<RoleModel> roles = new HashSet<>();
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
@@ -170,6 +180,14 @@ public class UsuarioModel extends RepresentationModel<UsuarioModel> implements S
 
     public void setTipo(UsuarioTipo tipo) {
         this.tipo = tipo;
+    }
+
+    public Set<RoleModel> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleModel> roles) {
+        this.roles = roles;
     }
 
     public UsuarioSituacao getSituacao() {

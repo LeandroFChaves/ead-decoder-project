@@ -1,9 +1,12 @@
 package br.com.ead.auth.controllers;
 
 import br.com.ead.auth.dtos.UsuarioDTO;
+import br.com.ead.auth.enums.TipoRole;
 import br.com.ead.auth.enums.UsuarioSituacao;
 import br.com.ead.auth.enums.UsuarioTipo;
+import br.com.ead.auth.models.RoleModel;
 import br.com.ead.auth.models.UsuarioModel;
+import br.com.ead.auth.services.RoleService;
 import br.com.ead.auth.services.UsuarioService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,12 @@ public class AuthenticationController {
 
     @Autowired
     UsuarioService userService;
+
+    @Autowired
+    RoleService roleService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PostMapping("registro")
     public ResponseEntity<Object> createUsuario(@RequestBody @Validated(UsuarioDTO.UserView.CadastroPost.class)
@@ -45,11 +55,16 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: O email informado já existe!");
         }
 
+        RoleModel roleModel = this.roleService.findByRoleNome(TipoRole.ROLE_ESTUDANTE)
+                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada"));
+
         UsuarioModel usuarioModel = new UsuarioModel();
         BeanUtils.copyProperties(userDTO, usuarioModel);
 
         usuarioModel.setSituacao(UsuarioSituacao.ATIVO);
         usuarioModel.setTipo(UsuarioTipo.ALUNO);
+        usuarioModel.getRoles().add(roleModel);
+        usuarioModel.setSenha(this.passwordEncoder.encode(usuarioModel.getSenha()));
         usuarioModel.setDataCriacao(LocalDateTime.now(ZoneId.of("UTC")));
         usuarioModel.setDataUltimaAtualizacao((LocalDateTime.now(ZoneId.of("UTC"))));
 
