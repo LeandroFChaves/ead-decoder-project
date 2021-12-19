@@ -1,5 +1,8 @@
 package br.com.ead.auth.controllers;
 
+import br.com.ead.auth.configs.security.JwtProvider;
+import br.com.ead.auth.dtos.JwtDTO;
+import br.com.ead.auth.dtos.LoginDTO;
 import br.com.ead.auth.dtos.UsuarioDTO;
 import br.com.ead.auth.enums.TipoRole;
 import br.com.ead.auth.enums.UsuarioSituacao;
@@ -15,10 +18,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -37,6 +45,12 @@ public class AuthenticationController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @PostMapping("registro")
     public ResponseEntity<Object> createUsuario(@RequestBody @Validated(UsuarioDTO.UserView.CadastroPost.class)
@@ -73,5 +87,16 @@ public class AuthenticationController {
         log.debug("POST createUsuario userDTO salvo {}", usuarioModel.getIdUsuario());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioModel);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
+        Authentication authentication = this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = this.jwtProvider.generateJwt(authentication);
+
+        return ResponseEntity.ok(new JwtDTO(jwt));
     }
 }
