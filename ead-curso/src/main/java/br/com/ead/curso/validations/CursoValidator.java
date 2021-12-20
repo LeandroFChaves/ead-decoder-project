@@ -1,11 +1,13 @@
 package br.com.ead.curso.validations;
 
+import br.com.ead.curso.configs.security.AuthenticationCurrentUserService;
 import br.com.ead.curso.dtos.CursoDTO;
 import br.com.ead.curso.enums.UsuarioTipo;
 import br.com.ead.curso.models.UsuarioModel;
 import br.com.ead.curso.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -21,6 +23,9 @@ public class CursoValidator implements Validator {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    AuthenticationCurrentUserService authenticationCurrentUserService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -38,14 +43,20 @@ public class CursoValidator implements Validator {
     }
 
     private void validateUsuarioDocente(Long usuarioDocente, Errors errors) {
-        Optional<UsuarioModel> userModelOptional = this.usuarioService.findById(usuarioDocente);
+        Long currentIdUsuario = this.authenticationCurrentUserService.getCurrentUser().getIdUsuario();
 
-        if (userModelOptional.isEmpty()) {
-            errors.rejectValue("usuarioDocente", "UsuarioDocenteError", "Docente não encontrado.");
-        }
+        if (currentIdUsuario.equals(usuarioDocente)) {
+            Optional<UsuarioModel> userModelOptional = this.usuarioService.findById(usuarioDocente);
 
-        if (userModelOptional.isPresent() && userModelOptional.get().getTipo().equals(UsuarioTipo.ALUNO.toString())) {
-            errors.rejectValue("usuarioDocente", "UsuarioDocenteError", "Usuário deve ser um DOCENTE ou ADMIN para criar um novo curso.");
+            if (userModelOptional.isEmpty()) {
+                errors.rejectValue("usuarioDocente", "UsuarioDocenteError", "Docente não encontrado.");
+            }
+
+            if (userModelOptional.isPresent() && userModelOptional.get().getTipo().equals(UsuarioTipo.ALUNO.toString())) {
+                errors.rejectValue("usuarioDocente", "UsuarioDocenteError", "Usuário deve ser um DOCENTE ou ADMIN para criar um novo curso.");
+            }
+        } else {
+            throw new AccessDeniedException("Forbidden");
         }
     }
 }
