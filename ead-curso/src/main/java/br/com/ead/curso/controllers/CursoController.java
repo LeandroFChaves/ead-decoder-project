@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class CursoController {
     CursoValidator cursoValidator;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Page<CursoModel>> getAllCursos(SpecificationTemplate.CursoSpec spec,
                                                          @PageableDefault(page = 0, size = 10, sort = "idCurso", direction = Sort.Direction.ASC) Pageable pageable,
                                                          @RequestParam(required = false) Long idUsuario) {
@@ -49,6 +51,7 @@ public class CursoController {
     }
 
     @GetMapping("/{idCurso}")
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Object> getCurso(@PathVariable(value = "idCurso") Long idCurso) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
 
@@ -60,6 +63,7 @@ public class CursoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('DOCENTE')")
     public ResponseEntity<Object> saveCurso(@RequestBody CursoDTO cursoDTO, Errors errors) {
         log.debug("POST saveCurso cursoDTO recebido {} ", cursoDTO.toString());
         this.cursoValidator.validate(cursoDTO, errors);
@@ -78,6 +82,7 @@ public class CursoController {
     }
 
     @PutMapping("/{idCurso}")
+    @PreAuthorize("hasAnyRole('DOCENTE')")
     public ResponseEntity<Object> updateCurso(@PathVariable(value = "idCurso") Long idCurso,
                                               @RequestBody @Valid CursoDTO cursoDTO) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
@@ -99,6 +104,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{idCurso}")
+    @PreAuthorize("hasAnyRole('DOCENTE')")
     public ResponseEntity<Object> deleteCurso(@PathVariable(value = "idCurso") Long idCurso) {
         Optional<CursoModel> cursoModelOptional = this.cursoService.findById(idCurso);
 

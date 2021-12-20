@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,12 +33,14 @@ public class AulaController {
     ModuloService moduloService;
 
     @GetMapping("/aulas")
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Page<AulaModel>> getAllAulas(SpecificationTemplate.AulaSpec spec,
                                                        @PageableDefault(page = 0, size = 10, sort = "idAula", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.aulaService.findAll(spec, pageable));
     }
 
     @GetMapping("/modulos/{idModulo}/aulas")
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Page<AulaModel>> getAllAulas(@PathVariable(value = "idModulo") Long idModulo,
                                                        SpecificationTemplate.AulaSpec spec,
                                                        @PageableDefault(page = 0, size = 10, sort = "idAula", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -45,6 +48,7 @@ public class AulaController {
     }
 
     @GetMapping("/modulos/{idModulo}/aulas/{idAula}")
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Object> getOneAula(@PathVariable(value = "idModulo") Long idModulo,
                                              @PathVariable(value = "idAula") Long idAula) {
         Optional<AulaModel> aulaModelOptional = this.aulaService.findAulaIntoModulo(idModulo, idAula);
@@ -57,6 +61,7 @@ public class AulaController {
     }
 
     @PostMapping("/modulos/{idModulo}/aulas")
+    @PreAuthorize("hasAnyRole('DOCENTE')")
     public ResponseEntity<Object> saveAula(@PathVariable(value = "idModulo") Long idModulo,
                                            @RequestBody @Valid AulaDTO aulaDTO) {
         Optional<ModuloModel> moduloModelOptional = this.moduloService.findById(idModulo);
@@ -75,6 +80,7 @@ public class AulaController {
     }
 
     @PutMapping("/modulos/{idModulo}/aulas/{idAula}")
+    @PreAuthorize("hasAnyRole('DOCENTE')")
     public ResponseEntity<Object> updateAula(@PathVariable(value = "idModulo") Long idModulo,
                                              @PathVariable(value = "idAula") Long idAula,
                                              @RequestBody @Valid AulaDTO aulaDTO) {
@@ -93,6 +99,7 @@ public class AulaController {
     }
 
     @DeleteMapping("/modulos/{idModulo}/aulas/{idAula}")
+    @PreAuthorize("hasAnyRole('DOCENTE')")
     public ResponseEntity<Object> deleteAula(@PathVariable(value = "idModulo") Long idModulo,
                                              @PathVariable(value = "idAula") Long idAula) {
         Optional<AulaModel> aulaModelOptional = this.aulaService.findAulaIntoModulo(idModulo, idAula);
