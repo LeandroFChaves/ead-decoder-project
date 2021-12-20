@@ -1,5 +1,7 @@
 package br.com.ead.auth.controllers;
 
+import br.com.ead.auth.configs.security.AuthenticationCurrentUserService;
+import br.com.ead.auth.configs.security.UserDetailsImpl;
 import br.com.ead.auth.dtos.UsuarioDTO;
 import br.com.ead.auth.models.UsuarioModel;
 import br.com.ead.auth.services.UsuarioService;
@@ -14,6 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +40,19 @@ public class UsuarioController {
     @Autowired
     UsuarioService userService;
 
+    @Autowired
+    AuthenticationCurrentUserService authenticationCurrentUserService;
+
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDANTE')")
     public ResponseEntity<Page<UsuarioModel>> getAllUsuarios(
             SpecificationTemplate.UserSpec spec,
-            @PageableDefault(page = 0, size = 10, sort = "idUsuario", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<UsuarioModel> userModelPage = userModelPage = this.userService.findAll(spec, pageable);
+            @PageableDefault(page = 0, size = 10, sort = "idUsuario", direction = Sort.Direction.ASC) Pageable pageable,
+            Authentication authentication) {
+        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("Usuário autenticado: {}", userDetails.getUsername());
+
+        Page<UsuarioModel> userModelPage = this.userService.findAll(spec, pageable);
 
         if (!userModelPage.isEmpty()) {
             for (UsuarioModel user : userModelPage.toList()) {
@@ -50,14 +64,21 @@ public class UsuarioController {
     }
 
     @GetMapping("/{idUsuario}")
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Object> getUsuario(@PathVariable(value = "idUsuario") Long idUsuario) {
-        Optional<UsuarioModel> userModelOptional = this.userService.findById(idUsuario);
+        Long currentIdUsuario = authenticationCurrentUserService.getCurrentUser().getIdUsuario();
 
-        if (userModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        if (currentIdUsuario.equals(idUsuario)) {
+            Optional<UsuarioModel> userModelOptional = this.userService.findById(idUsuario);
+
+            if (userModelOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+        } else {
+            throw new AccessDeniedException("Acesso negado.");
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
     }
 
     @PutMapping("/{idUsuario}")
