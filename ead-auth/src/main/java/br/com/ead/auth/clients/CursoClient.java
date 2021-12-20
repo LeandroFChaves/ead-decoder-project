@@ -12,10 +12,11 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -38,26 +39,25 @@ public class CursoClient {
     //@Retry(name = "retryInstance", fallbackMethod = "retryFallback")
     //@CircuitBreaker(name = "circuitBreakerInstance", fallbackMethod = "circuitBreakerFallback")
     @CircuitBreaker(name = "circuitBreakerInstance")
-    public Page<CursoDTO> getAllCursosByUsuario(Long idUsuario, Pageable pageable) {
+    public Page<CursoDTO> getAllCursosByUsuario(Long idUsuario, String token, Pageable pageable) {
         List<CursoDTO> cursos = new ArrayList<CursoDTO>();
 
         String url = this.REQUEST_URI_CURSOS + this.utilsService.createUrlGetAllCursosByUsuario(idUsuario, pageable);
 
         log.debug("Request URL: {} ", url);
 
-        try {
-            ParameterizedTypeReference<ResponsePageDTO<CursoDTO>> responseType =
-                    new ParameterizedTypeReference<ResponsePageDTO<CursoDTO>>() {
-                    };
+        ParameterizedTypeReference<ResponsePageDTO<CursoDTO>> responseType =
+                new ParameterizedTypeReference<ResponsePageDTO<CursoDTO>>() {
+                };
 
-            ResponseEntity<ResponsePageDTO<CursoDTO>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
-            cursos = result.getBody().getContent();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
 
-            log.debug("Response /cursos - Número de elementos: {} ", cursos.size());
-        } catch (HttpStatusCodeException e) {
-            log.error("Error request /cursos {} ", e);
-        }
+        ResponseEntity<ResponsePageDTO<CursoDTO>> result = restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
+        cursos = result.getBody().getContent();
 
+        log.debug("Response /cursos - Número de elementos: {} ", cursos.size());
         log.debug("Request finalizado /cursos idUsuario {} ", idUsuario);
 
         return new PageImpl<>(cursos);
