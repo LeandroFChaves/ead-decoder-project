@@ -16,4 +16,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long>, Jp
 
     @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.FETCH)
     Optional<UsuarioModel> findByUsuario(String usuario);
+
+    @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.FETCH)
+    Optional<UsuarioModel> findById(Long idUsuario);
 }

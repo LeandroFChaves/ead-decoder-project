@@ -3,6 +3,7 @@ package br.com.ead.auth.configs.security;
 import br.com.ead.auth.models.UsuarioModel;
 import br.com.ead.auth.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,5 +21,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + usuario));
 
         return UserDetailsImpl.build(usuarioModel);
+    }
+
+    public UserDetails loadUserById(Long idUsuario) throws AuthenticationCredentialsNotFoundException {
+        UsuarioModel userModel = this.usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Usuário não encontrado: " + idUsuario));
+
+        return UserDetailsImpl.build(userModel);
     }
 }
