@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ public class NotificacaoController {
     }
 
     @GetMapping("/usuarios/{idUsuario}/notificacoes")
+    @PreAuthorize("hasAnyRole('ESTUDANTE')")
     public ResponseEntity<Page<NotificacaoModel>> getAllNotificacoesByUsuario(
             @PathVariable(value = "idUsuario") Long idUsuario,
             @PageableDefault(page = 0, size = 10, sort = "idNotificacao", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -32,6 +34,7 @@ public class NotificacaoController {
     }
 
     @PutMapping("/usuarios/{idUsuario}/notificacoes/{idNotificacao}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Object> updateNotificacao(@PathVariable(value = "idUsuario") Long idUsuario,
                                                      @PathVariable(value = "idNotificacao") Long idNotificacao,
                                                      @RequestBody @Valid NotificacaoDTO notificacaoDTO) {
