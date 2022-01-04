@@ -10,6 +10,9 @@ spring:
           default-label: master
           search-paths: ead-configs
 
+encrypt:
+  key: kYp3s6v9y$B?E(H+MbQeThWmZq4t7w!z%C*F)J@NcRfUjXn2r5u8x/A?D(G+KaPd
+
 ead:
   serviceRegistry:
     username: admin
