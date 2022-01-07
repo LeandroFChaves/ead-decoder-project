@@ -1,0 +1,52 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-path: '/ead-notificacoes/'
+
+spring:
+  application:
+    name: ead-notificacao-service
+
+  datasource:
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+
+  rabbitmq:
+    addresses: ${CLOUDAMQP_URL}
+
+# TRACE, DEGUG, INFO, WARN, ERROR
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    br.com.ead: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
+
+ead:
+  broker:
+    exchange:
+      notificacaoCommandExchange: ead.notificacaocommand
+    queue:
+      notificacaoCommandQueue:
+        name: ead.notificacaocommand.ms.notificacao
+    key:
+      notificacaoCommandKey: ms.notificacao
