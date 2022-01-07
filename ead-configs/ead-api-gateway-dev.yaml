@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ead-api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ead-auth-service
+          uri: lb://EAD-AUTH-SERVICE
+          predicates:
+            - Path=/ead-auth/**
+        - id: ead-curso-service
+          uri: lb://EAD-CURSO-SERVICE
+          predicates:
+            - Path=/ead-cursos/**
+        - id: ead-notificacao-service
+          uri: lb://EAD-NOTIFICACAO-SERVICE
+          predicates:
+            - Path=/ead-notificacoes/**
