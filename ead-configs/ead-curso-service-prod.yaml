@@ -1,0 +1,57 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-path: '/ead-cursos/'
+
+spring:
+  application:
+    name: ead-curso-service
+
+  datasource:
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: update
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+    open-in-view: true
+
+  rabbitmq:
+    addresses: ${CLOUDAMQP_URL}
+
+# TRACE, DEGUG, INFO, WARN, ERROR
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    br.com.ead: DEBUG
+
+ead:
+  api:
+    url:
+      usuarios: 'http://ead-auth-service/ead-auth'
+  broker:
+    exchange:
+      usuarioEventExchange: ead.usuarioevent
+      notificacaoCommandExchange: ead.notificacaocommand
+    queue:
+      usuarioEventQueue:
+        name: ead.usuarioevent.ms.curso
+    key:
+      notificacaoCommandKey: ms.notificacao
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health

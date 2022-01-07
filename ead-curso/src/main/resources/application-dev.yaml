@@ -1,0 +1,73 @@
+#server:
+#  port: 8082
+#  servlet:
+#    context-path: '/ead-cursos/'
+#
+spring:
+  application:
+    name: ead-curso-service
+  config:
+    import: 'optional:configserver:'
+  cloud:
+    config:
+      discovery:
+        service-id: ead-config-server
+      username: admin
+      password: admin
+#
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/ead-curso
+#    username: admin
+#    password: admin
+#
+#  jpa:
+#    hibernate:
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
+#      ddl-auto: update
+#      jdbc:
+#        lob.non-contextual-creation: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#    open-in-view: true
+#
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: admin
+#    password: admin
+#    virtual-host: '/'
+#
+#  output:
+#    ansi:
+#      enabled: always
+#
+## TRACE, DEGUG, INFO, WARN, ERROR
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.web: INFO
+#    org.hibernate: INFO
+#    br.com.ead: DEBUG
+#
+#eureka:
+#  client:
+#    service-url:
+#      default-zone: 'http://localhost:8761/eureka'
+#
+#  instance:
+#    hostname: localhost
+#
+#ead:
+#  api:
+#    url:
+#      usuarios: 'http://ead-auth-service/ead-auth'
+#  broker:
+#    exchange:
+#      usuarioEventExchange: ead.usuarioevent
+#      notificacaoCommandExchange: ead.notificacaocommand
+#    queue:
+#      usuarioEventQueue:
+#        name: ead.usuarioevent.ms.curso
+#    key:
+#      notificacaoCommandKey: ms.notificacao
